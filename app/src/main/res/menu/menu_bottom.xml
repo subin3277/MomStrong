@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tab_info"
+        android:title="산모 정보"/>
+
+    <item
+        android:id="@+id/tab_eat"
+        android:title="식단 관리"/>
+
+    <item
+        android:id="@+id/tab_yoga"
+        android:title="산모 요가"/>
+
+    <item
+        android:id="@+id/tab_hos"
+        android:title="병원 정보"/>
+
+</menu>
