@@ -20,7 +20,11 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -44,6 +48,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import java.io.IOException;
 import java.net.URL;
@@ -58,8 +63,8 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
     private GoogleMap mMap;
     private Marker currentMarker = null;
 
-    private String HOSP_URL="http://apis.data.go.kr/B552657/HsptlAsembySearchService/getHsptlMdcncListInfoInqire?serviceKey=Sxg2hr%2B3A7uYPvw%2ByMVdTwGz84zpeOwyPsM46ZizvjKO%2BriGi5xGUxk4DLPqHfPOqk59UbbEl426FVEANZuxjw%3D%3D&Q0=";
-    String loca1,loca2;
+    private String HOSP_URL = "http://apis.data.go.kr/B552657/HsptlAsembySearchService/getHsptlMdcncListInfoInqire?serviceKey=Sxg2hr%2B3A7uYPvw%2ByMVdTwGz84zpeOwyPsM46ZizvjKO%2BriGi5xGUxk4DLPqHfPOqk59UbbEl426FVEANZuxjw%3D%3D&Q0=";
+    String loca1, loca2;
 
     private static final String TAG = "googlemap";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
@@ -72,9 +77,8 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
     boolean needRequest = false;
 
 
-
     // 앱을 실행하기 위해 필요한 퍼미션을 정의합니다.
-    String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
 
 
     Location mCurrentLocatiion;
@@ -84,67 +88,205 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
+    String markerTitle;
+    String markerSnippet;
 
     private View mLayout;
 
-    Button thislocation;
+    Button thislocation,setlocation,searchlocation;
+    private Spinner spinnerCity, spinnerSigun;
+    private ArrayAdapter<String> arrayAdapter;
+    private LinearLayout searchview;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_findhospital);
 
         mLayout = findViewById(R.id.layout_findhospital);
         thislocation = findViewById(R.id.findhos_btn_thislocation);
+        setlocation = findViewById(R.id.findhos_btn_setlocation);
+        searchlocation =findViewById(R.id.findhos_btn_search);
+        searchview = findViewById(R.id.findhos_searchadd);
 
+        spinnerCity = findViewById(R.id.findhos_spinner_sido);
+        spinnerSigun = findViewById(R.id.findhos_spinner_sigun);
+        arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,(String[])getResources().getStringArray(R.array.spinner_region));
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCity.setAdapter(arrayAdapter);
+
+        initAddressSpinner();
 
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL_MS)
                 .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
 
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+
+
+        LocationSettingsRequest.Builder builder =
+                new LocationSettingsRequest.Builder();
+
         builder.addLocationRequest(locationRequest);
+
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
+
+
+
 
         thislocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                setCurrentLocation(location,markerTitle,markerSnippet);
+
             }
         });
 
+        setlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchview.setVisibility(View.VISIBLE);
+            }
+        });
+
+        searchlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (currentMarker != null) currentMarker.remove();
+
+                loca1 = spinnerCity.getSelectedItem().toString();
+                loca2 = spinnerSigun.getSelectedItem().toString();
+                loca2 = loca2.replace(" ","");
+                if (loca2.equals("없음"))
+                    loca2="";
+
+                new GetLocation().execute();
+            }
+        });
 
     }
 
-    @Override
-    public void onMapReady(final GoogleMap googleMap){
+    private void initAddressSpinner(){
+        spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                switch (position) {
+                    case 0:
+                        spinnerSigun.setAdapter(null);
+                        break;
+                    case 1:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_seoul);
+                        break;
+                    case 2:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_busan);
+                        break;
+                    case 3:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_daegu);
+                        break;
+                    case 4:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_incheon);
+                        break;
+                    case 5:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_gwangju);
+                        break;
+                    case 6:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_daejeon);
+                        break;
+                    case 7:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_ulsan);
+                        break;
+                    case 8:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_sejong);
+                        break;
+                    case 9:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_gyeonggi);
+                        break;
+                    case 10:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_gangwon);
+                        break;
+                    case 11:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_chung_buk);
+                        break;
+                    case 12:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_chung_nam);
+                        break;
+                    case 13:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_jeon_buk);
+                        break;
+                    case 14:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_jeon_nam);
+                        break;
+                    case 15:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_gyeong_buk);
+                        break;
+                    case 16:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_gyeong_nam);
+                        break;
+                    case 17:
+                        setSigunSpinnerAdapterItem(R.array.spinner_region_jeju);
+                        break;
+                }
+            }
 
-        Log.d(TAG,"ㅐonMapReady : ");
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void setSigunSpinnerAdapterItem(int array_resource) {
+        if (arrayAdapter != null) {
+            spinnerSigun.setAdapter(null);
+            arrayAdapter = null;
+        }
+
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, (String[])getResources().getStringArray(array_resource));
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSigun.setAdapter(arrayAdapter);
+    }
+
+    public void onMapReady(final GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady :");
+
         mMap = googleMap;
 
+        //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
+        //지도의 초기위치를 서울로 이동
         setDefaultLocation();
 
+
+        //런타임 퍼미션 처리
+        // 1. 위치 퍼미션을 가지고 있는지 체크합니다.
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION);
 
 
-
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
-                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED   ) {
+                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
+
+            // 2. 이미 퍼미션을 가지고 있다면
+            // ( 안드로이드 6.0 이하 버전은 런타임 퍼미션이 필요없기 때문에 이미 허용된 걸로 인식합니다.)
+
 
             startLocationUpdates(); // 3. 위치 업데이트 시작
 
 
-        }else {
+        } else {  //2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요합니다. 2가지 경우(3-1, 4-1)가 있습니다.
+
+            // 3-1. 사용자가 퍼미션 거부를 한 적이 있는 경우에는
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])) {
 
                 // 3-2. 요청을 진행하기 전에 사용자가에게 퍼미션이 필요한 이유를 설명해줄 필요가 있습니다.
@@ -155,27 +297,32 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                     public void onClick(View view) {
 
                         // 3-3. 사용자게에 퍼미션 요청을 합니다. 요청 결과는 onRequestPermissionResult에서 수신됩니다.
-                        ActivityCompat.requestPermissions( FindhospitalActivity.this, REQUIRED_PERMISSIONS,
+                        ActivityCompat.requestPermissions(FindhospitalActivity.this, REQUIRED_PERMISSIONS,
                                 PERMISSIONS_REQUEST_CODE);
                     }
                 }).show();
 
+
             } else {
                 // 4-1. 사용자가 퍼미션 거부를 한 적이 없는 경우에는 퍼미션 요청을 바로 합니다.
                 // 요청 결과는 onRequestPermissionResult에서 수신됩니다.
-                ActivityCompat.requestPermissions( this, REQUIRED_PERMISSIONS,
+                ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS,
                         PERMISSIONS_REQUEST_CODE);
             }
 
         }
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        // 현재 오동작을 해서 주석처리
+
+        //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
             public void onMapClick(LatLng latLng) {
 
-                Log.d( TAG, "onMapClick :");
+                Log.d(TAG, "onMapClick :");
             }
         });
     }
@@ -195,15 +342,15 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                         = new LatLng(location.getLatitude(), location.getLongitude());
 
 
-                String markerTitle = getCurrentAddress(currentPosition);
-                String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
+                markerTitle = getCurrentAddress(currentPosition);
+                markerSnippet = "위도:" + String.valueOf(location.getLatitude())
                         + " 경도:" + String.valueOf(location.getLongitude());
 
                 Log.d(TAG, "onLocationResult : " + markerSnippet);
 
 
                 //현재 위치에 마커 생성하고 이동
-                setCurrentLocation(location, markerTitle, markerSnippet);
+
 
                 mCurrentLocatiion = location;
             }
@@ -214,14 +361,13 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
     };
 
 
-
     private void startLocationUpdates() {
 
         if (!checkLocationServicesStatus()) {
 
             Log.d(TAG, "startLocationUpdates : call showDialogForLocationServiceSetting");
             showDialogForLocationServiceSetting();
-        }else {
+        } else {
 
             int hasFineLocationPermission = ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION);
@@ -229,9 +375,8 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                     Manifest.permission.ACCESS_COARSE_LOCATION);
 
 
-
             if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED ||
-                    hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED   ) {
+                    hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
 
                 Log.d(TAG, "startLocationUpdates : 퍼미션 안가지고 있음");
                 return;
@@ -261,7 +406,7 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
             Log.d(TAG, "onStart : call mFusedLocationClient.requestLocationUpdates");
             mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
 
-            if (mMap!=null)
+            if (mMap != null)
                 mMap.setMyLocationEnabled(true);
 
         }
@@ -281,8 +426,6 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
             mFusedLocationClient.removeLocationUpdates(locationCallback);
         }
     }
-
-
 
 
     public String getCurrentAddress(LatLng latlng) {
@@ -329,30 +472,6 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
     }
 
 
-    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
-
-//////////////////////////////////////////////////////////
-        if (currentMarker != null) currentMarker.remove();
-
-
-        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(currentLatLng);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-
-
-        currentMarker = mMap.addMarker(markerOptions);
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
-        mMap.moveCamera(cameraUpdate);
-
-        HospitalLocation(markerTitle);
-    }
-
-
     public void setDefaultLocation() {
 
 
@@ -387,15 +506,15 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                 Manifest.permission.ACCESS_COARSE_LOCATION);
 
 
-
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
-                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED   ) {
+                hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
 
         return false;
 
     }
+
 
     /*
      * ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.
@@ -405,7 +524,7 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                                            @NonNull String[] permissions,
                                            @NonNull int[] grandResults) {
 
-        if ( permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
+        if (permsRequestCode == PERMISSIONS_REQUEST_CODE && grandResults.length == REQUIRED_PERMISSIONS.length) {
 
             // 요청 코드가 PERMISSIONS_REQUEST_CODE 이고, 요청한 퍼미션 개수만큼 수신되었다면
 
@@ -421,12 +540,12 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                 }
             }
 
-            if ( check_result ) {
+
+            if (check_result) {
 
                 // 퍼미션을 허용했다면 위치 업데이트를 시작합니다.
                 startLocationUpdates();
-            }
-            else {
+            } else {
                 // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료합니다.2 가지 경우가 있습니다.
 
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, REQUIRED_PERMISSIONS[0])
@@ -444,7 +563,7 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                         }
                     }).show();
 
-                }else {
+                } else {
 
 
                     // "다시 묻지 않음"을 사용자가 체크하고 거부를 선택한 경우에는 설정(앱 정보)에서 퍼미션을 허용해야 앱을 사용할 수 있습니다.
@@ -515,6 +634,34 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
+
+    public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
+
+//////////////////////////////////////////////////////////
+        if (currentMarker != null) currentMarker.remove();
+
+
+        LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+/*
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(currentLatLng);
+        markerOptions.title(markerTitle);
+        markerOptions.snippet(markerSnippet);
+        markerOptions.draggable(true);
+
+
+        currentMarker = mMap.addMarker(markerOptions);
+*/
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
+        mMap.moveCamera(cameraUpdate);
+
+        HospitalLocation(markerTitle);
+    }
+
+
+
     public void HospitalLocation(String title){
         String[] array = title.split(" ");
         loca1 = array[1];
@@ -522,34 +669,41 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
 
         Log.e("파싱위치:", loca1+loca2);
 
-        new GetLocation().execute();
+        new GetLocationforGPS().execute();
 
     }
 
-    private class GetLocation extends AsyncTask<Void, Void, Document> {
+    private class GetLocation extends AsyncTask<String, Void, Document> {
         @Override
-        protected Document doInBackground(Void... urls) {
+        protected Document doInBackground(String... urls) {
             URL url;
             Document doc = null;
             try {
-                url = new URL(HOSP_URL + loca1 + "&Q1=" + loca2 + "&QZ=B&QD=D011");
-                Log.e("주소 : ", url.toString());
+                StringBuffer buffer = new StringBuffer();
+                buffer.append(HOSP_URL);
+                buffer.append(loca1);
+                buffer.append("&Q1=");
+                buffer.append(loca2);
+                buffer.append("&QD=D011");
+                url = new URL(buffer.toString());
+                Log.e("주소 : ", buffer.toString());
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = dbf.newDocumentBuilder();
-                doc = db.parse(url.toString());
+                doc = db.parse(new InputSource(url.openStream()));
                 doc.getDocumentElement().normalize();
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("오류",e.toString());
             }
-                return doc;
-            }
+            return doc;
+        }
 
         @Override
         protected void onPostExecute(Document doc){
             NodeList nodeList = doc.getElementsByTagName("item");
 
             for (int i = 0; i < nodeList.getLength(); i++) {
+
                 Node node = nodeList.item(i);
                 Element fstElmnt = (Element) node;
 
@@ -563,6 +717,73 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                 String strLat = Lat.item(0).getChildNodes().item(0).getNodeValue();
                 String strLon = Lon.item(0).getChildNodes().item(0).getNodeValue();
 
+                if (i==0){
+                    LatLng LatLng = new LatLng(Double.parseDouble(strLat), Double.parseDouble(strLon));
+
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(LatLng);
+                    mMap.moveCamera(cameraUpdate);
+                }
+
+                LatLng currentLatLng = new LatLng(Double.parseDouble(strLat), Double.parseDouble(strLon));
+
+                MarkerOptions markerOptions = new MarkerOptions();
+
+                markerOptions.position(currentLatLng);
+                markerOptions.title(strname);
+                markerOptions.snippet(stradd);
+                markerOptions.draggable(true);
+
+                currentMarker = mMap.addMarker(markerOptions);
+            }
+        }
+
+    }
+
+    private class GetLocationforGPS extends AsyncTask<String, Void, Document> {
+        @Override
+        protected Document doInBackground(String... urls) {
+            URL url;
+            Document doc = null;
+            try {
+                StringBuffer buffer = new StringBuffer();
+                buffer.append(HOSP_URL);
+                buffer.append(loca1);
+                buffer.append("&Q1=");
+                buffer.append(loca2);
+                buffer.append("&QD=D011");
+                url = new URL(buffer.toString());
+                Log.e("주소 : ", buffer.toString());
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                doc = db.parse(new InputSource(url.openStream()));
+                doc.getDocumentElement().normalize();
+
+            } catch (Exception e) {
+                Log.e("오류",e.toString());
+            }
+            return doc;
+        }
+
+        @Override
+        protected void onPostExecute(Document doc){
+            NodeList nodeList = doc.getElementsByTagName("item");
+
+            for (int i = 0; i < nodeList.getLength(); i++) {
+
+                Node node = nodeList.item(i);
+                Element fstElmnt = (Element) node;
+
+                NodeList name = fstElmnt.getElementsByTagName("dutyName");
+                NodeList add = fstElmnt.getElementsByTagName("dutyAddr");
+                NodeList Lat = fstElmnt.getElementsByTagName("wgs84Lat");
+                NodeList Lon = fstElmnt.getElementsByTagName("wgs84Lon");
+
+                String strname = name.item(0).getChildNodes().item(0).getNodeValue();
+                String stradd = add.item(0).getChildNodes().item(0).getNodeValue();
+                String strLat = Lat.item(0).getChildNodes().item(0).getNodeValue();
+                String strLon = Lon.item(0).getChildNodes().item(0).getNodeValue();
+
+
                 LatLng currentLatLng = new LatLng(Double.parseDouble(strLat), Double.parseDouble(strLon));
 
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -575,7 +796,7 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                 currentMarker = mMap.addMarker(markerOptions);
             }
 
-            }
+        }
 
     }
 

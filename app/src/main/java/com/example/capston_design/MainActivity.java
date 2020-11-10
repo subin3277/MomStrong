@@ -21,14 +21,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bottomNavigationView = findViewById(R.id.bottomTab);
+        //bottomNavigationView = findViewById(R.id.bottomTab);
         infoFragment = new InfoFragment();
         dietFragment = new DietFragment();
         yogaFragment = new YogaFragment();
         hospFragment = new HospFragment();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.framelayout,infoFragment).commit();
-
+        //getSupportFragmentManager().beginTransaction().replace(R.id.framelayout,infoFragment).commit();
+/*
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -48,6 +48,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return false;
             }
-        });
+        });*/
     }
 }
