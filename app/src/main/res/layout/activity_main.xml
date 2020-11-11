@@ -39,7 +39,7 @@
                 android:layout_marginRight="1dp"
                 android:layout_margin="20dp"
                 />
-            <ImageView
+            <View
                 android:layout_width="3dp"
                 android:layout_height="match_parent"
                 android:background="#000000"
@@ -52,6 +52,14 @@
                 />
         </TableRow>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#000000"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            />
+
         <TableRow
             >
             <ImageView
@@ -60,7 +68,7 @@
                 android:layout_margin="20dp"
                 android:background="@drawable/ic_baseline_sports_handball_24"
                 />
-            <ImageView
+            <View
                 android:layout_width="3dp"
                 android:layout_height="match_parent"
                 android:background="#000000"

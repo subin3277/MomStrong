@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListPopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
@@ -116,6 +118,18 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
         arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,(String[])getResources().getStringArray(R.array.spinner_region));
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCity.setAdapter(arrayAdapter);
+
+        try {
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+
+            ListPopupWindow window = (ListPopupWindow)popup.get(spinnerCity);
+            ListPopupWindow window2 = (ListPopupWindow)popup.get(spinnerCity);
+            window.setHeight(700);
+            window2.setHeight(700);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         initAddressSpinner();
 
