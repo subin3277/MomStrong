@@ -31,12 +31,12 @@
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background=""
             >
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@drawable/ic_baseline_assessment_24"
-                android:layout_marginRight="1dp"
                 android:layout_margin="20dp"
                 />
             <View
@@ -49,6 +49,7 @@
                 android:layout_height="100dp"
                 android:layout_margin="20dp"
                 android:background="@drawable/ic_baseline_restaurant_24"
+                android:backgroundTint=""
                 />
         </TableRow>
 
