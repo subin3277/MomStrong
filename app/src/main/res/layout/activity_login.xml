@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
     android:orientation="vertical"
-    android:background="#ffcdd2">
+    android:background="@color/pink">
 
     <TextView
         android:layout_width="match_parent"
@@ -56,10 +56,22 @@
         android:inputType="textPassword"/>
 
     <Button
+        android:id="@+id/login_btn_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="회원 가입"
+        android:textSize="30sp"
+        android:background="#ffffff"
+        android:layout_marginTop="20dp"
+        />
+
+    <Button
+        android:id="@+id/login_btn_go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="바로 들어가기"
         android:textSize="30sp"
         android:background="#ffffff"
         android:layout_marginTop="20dp"

@@ -19,21 +19,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".DietinfoActivity"></activity>
+        <activity android:name=".YogainfoActivity" />
+        <activity android:name=".Yoga1stActivity" />
+        <activity android:name=".Signup2Activity" />
         <activity android:name=".YogaActivity" />
         <activity android:name=".InformationActivity" />
-        <activity android:name=".HospitalActivity">
+        <activity android:name=".HospitalActivity" />
+        <activity android:name=".DietActivity" />
+        <activity android:name=".FindhospitalActivity" />
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DietActivity" />
-        <activity android:name=".FindhospitalActivity" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

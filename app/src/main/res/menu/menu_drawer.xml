@@ -34,6 +34,10 @@
                 <item
                     android:id="@+id/tab_set"
                     android:title="설정"/>
+
+                <item
+                    android:id="@+id/tab_logout"
+                    android:title="로그아웃"/>
             </group>
 
         </menu>
