@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,28 +40,24 @@ public class DietActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Context context = this;
 
-    RecyclerView recyclerViewrice,recyclerViewsoup,recyclerViewfirst,recyclerViewsecond;
-    DietAdapter dietAdapter_rice,dietAdapter_soup,dietAdapter_first,dietAdapter_second;
+    static RecyclerView recyclerViewrice,recyclerViewsoup,recyclerViewfirst,recyclerViewsecond;
+    static DietAdapter dietAdapter_rice,dietAdapter_soup,dietAdapter_first,dietAdapter_second;
     ItemTouchHelper helper;
-    DietItem riceitem,soupitem,firstitem,seconditem;
-    String ricename=null,soupname=null,firstname=null,secondname=null;
+    static DietItem riceitem, soupitem,firstitem,seconditem;
+    static String ricename=null,soupname=null,firstname=null,secondname=null;
     Button finish1,finish2,finish3,finish4;
-    TextView soup,first,second;
-    int users_age;
-    ArrayList<String> ricelist = new ArrayList<>();
-    ArrayList<String> souplist = new ArrayList<>();
-    ArrayList<String> firstlist = new ArrayList<>();
-    ArrayList<String> secondlist = new ArrayList<>();
+    TextView soup,first,second,tvnull;
+    static int users_age=22;
 
-    JSONObject jsonObject_rice = new JSONObject();
-    JSONObject jsonObject_soup = new JSONObject();
-    JSONObject jsonObject_first = new JSONObject();
-    JSONObject jsonObject_second = new JSONObject();
+    static ArrayList<String> ricelist = new ArrayList<>();
+    static ArrayList<String> souplist = new ArrayList<>();
+    static ArrayList<String> firstlist = new ArrayList<>();
+    static ArrayList<String> secondlist = new ArrayList<>();
 
-    private String RICE_URL = "http://13.125.245.6/api/diets/postRiceDiets";
-    private String SOUP_URL = "";
-    private String FIRST_URL= "";
-    private String SECOND_URL= "";
+    static String RICE_URL = "http://13.125.245.6:3000/api/diets/postRiceDiets";
+    static String SOUP_URL = "http://13.125.245.6:3000/api/diets/postSoupDiets";
+    static String SIDE1_URL= "http://13.125.245.6:3000/api/diets/postSideDiets1";
+    static String SIDE2_URL= "http://13.125.245.6:3000/api/diets/postSideDiets2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +83,8 @@ public class DietActivity extends AppCompatActivity {
         soup = findViewById(R.id.diet_tv_soup);
         first = findViewById(R.id.diet_tv_first);
         second = findViewById(R.id.diet_tv_second);
+
+        tvnull = findViewById(R.id.dietlist_null);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.diet_nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -118,6 +117,8 @@ public class DietActivity extends AppCompatActivity {
             }
         });
 
+
+
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewrice.setLayoutManager(manager);
@@ -129,12 +130,6 @@ public class DietActivity extends AppCompatActivity {
         helper.attachToRecyclerView(recyclerViewrice);
 
         new GetRice().execute();
-
-        if (dietAdapter_rice==null){
-            ricename=riceitem.getName();
-            ricelist.add(ricename);
-            new GetRice().execute();
-        }
 
         finish1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,17 +145,13 @@ public class DietActivity extends AppCompatActivity {
                 dietAdapter_soup = new DietAdapter();
                 recyclerViewsoup.setAdapter(dietAdapter_soup);
 
-                helper = new ItemTouchHelper(new ItemTouchHelperCallback(dietAdapter_soup));
+                helper = new ItemTouchHelper(new ItemTouchHelperCallback_soup(dietAdapter_soup));
                 helper.attachToRecyclerView(recyclerViewsoup);
 
                 new GetSoup().execute();
-
-                if (dietAdapter_soup==null){
-                    soupname=soupitem.getName();
-                    new GetSoup().execute();
-                }
             }
         });
+
 
         finish2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,15 +167,11 @@ public class DietActivity extends AppCompatActivity {
                 dietAdapter_first = new DietAdapter();
                 recyclerViewfirst.setAdapter(dietAdapter_first);
 
-                helper = new ItemTouchHelper(new ItemTouchHelperCallback(dietAdapter_first));
+                helper = new ItemTouchHelper(new ItemTouchHelperCallback_first(dietAdapter_first));
                 helper.attachToRecyclerView(recyclerViewfirst);
 
-                new GetFirst().execute();
+                new GetSide1().execute();
 
-                if (dietAdapter_first==null){
-                    firstname=firstitem.getName();
-                    new GetFirst().execute();
-                }
             }
         });
 
@@ -200,17 +187,13 @@ public class DietActivity extends AppCompatActivity {
                 recyclerViewsecond.setLayoutManager(manager);
 
                 dietAdapter_second = new DietAdapter();
-                recyclerViewsoup.setAdapter(dietAdapter_second);
+                recyclerViewsecond.setAdapter(dietAdapter_second);
 
-                helper = new ItemTouchHelper(new ItemTouchHelperCallback(dietAdapter_second));
+                helper = new ItemTouchHelper(new ItemTouchHelperCallback_second(dietAdapter_second));
                 helper.attachToRecyclerView(recyclerViewsecond);
 
-                new GetSecond().execute();
+                new GetSide2().execute();
 
-                if (dietAdapter_second==null){
-                    secondname=seconditem.getName();
-                    new GetSecond().execute();
-                }
             }
         });
 
@@ -223,6 +206,7 @@ public class DietActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void setUpRecyclerView() {
         recyclerViewrice.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -244,12 +228,13 @@ public class DietActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class GetRice extends AsyncTask<Void, Void, String> {
+    public static class GetRice extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
 
             String response = null;
+            JSONObject jsonObject_rice = new JSONObject();
 
             HttpURLConnection connection = null;
             OutputStream outputStream = null;
@@ -257,6 +242,7 @@ public class DietActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = null;
 
             try {
+                Log.e("진행:","1");
                 URL url = new URL(RICE_URL);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
@@ -272,6 +258,8 @@ public class DietActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                Log.e("json",jsonObject_rice.toString());
 
                 outputStream = connection.getOutputStream();
                 outputStream.write(jsonObject_rice.toString().getBytes());
@@ -318,17 +306,24 @@ public class DietActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            Log.e("response",msg + nutrition);
+
             riceitem = new DietItem(msg,nutrition);
             dietAdapter_rice.addItem(riceitem);
+            recyclerViewrice.setAdapter(dietAdapter_rice);
+            ricename=riceitem.getName();
+            ricelist.add(ricename);
+
         }
     }
 
-    public class GetSoup extends AsyncTask<Void, Void, String> {
+    public static class GetSoup extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
 
             String response = null;
+            JSONObject jsonObject_soup = new JSONObject();
 
             HttpURLConnection connection = null;
             OutputStream outputStream = null;
@@ -336,6 +331,7 @@ public class DietActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = null;
 
             try {
+                Log.e("진행:","2");
                 URL url = new URL(SOUP_URL);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
@@ -347,11 +343,13 @@ public class DietActivity extends AppCompatActivity {
 
                 try {
                     jsonObject_soup.put("users_age",users_age);
-                    jsonObject_soup.put("swipeRice", souplist);
+                    jsonObject_soup.put("riceDietName",ricename);
+                    jsonObject_soup.put("swipeSoup", souplist);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+                Log.e("json",jsonObject_soup.toString());
                 outputStream = connection.getOutputStream();
                 outputStream.write(jsonObject_soup.toString().getBytes());
                 outputStream.flush();
@@ -370,7 +368,7 @@ public class DietActivity extends AppCompatActivity {
                     byteData = baos.toByteArray();
                     response = new String(byteData);
 
-                    response = new String(byteData);
+                    Log.e("response",response);
 
                 }
             } catch (IOException e) {
@@ -390,7 +388,7 @@ public class DietActivity extends AppCompatActivity {
             try {
                 JSONObject responseJSON = new JSONObject(response);
                 result = (JSONObject) responseJSON.get("res_data");
-                rice = (JSONObject) result.get("Soup");
+                rice = (JSONObject) result.get("soup");
                 msg = rice.getString("dietName");
                 nutrition = rice.getString("classification");
 
@@ -400,15 +398,19 @@ public class DietActivity extends AppCompatActivity {
 
             soupitem = new DietItem(msg,nutrition);
             dietAdapter_soup.addItem(soupitem);
+            recyclerViewsoup.setAdapter(dietAdapter_soup);
+            soupname=soupitem.getName();
+            souplist.add(soupname);
         }
     }
 
-    public class GetFirst extends AsyncTask<Void, Void, String> {
+    public static class GetSide1 extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
 
             String response = null;
+            JSONObject jsonObject_first = new JSONObject();
 
             HttpURLConnection connection = null;
             OutputStream outputStream = null;
@@ -416,7 +418,7 @@ public class DietActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = null;
 
             try {
-                URL url = new URL(FIRST_URL);
+                URL url = new URL(SIDE1_URL);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Cache-Control", "no-cache");
@@ -427,7 +429,9 @@ public class DietActivity extends AppCompatActivity {
 
                 try {
                     jsonObject_first.put("users_age",users_age);
-                    jsonObject_first.put("swipeRice", firstlist);
+                    jsonObject_first.put("riceDietName",ricename);
+                    jsonObject_first.put("soupDietName",soupname);
+                    jsonObject_first.put("swipeSide", firstlist);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -450,9 +454,7 @@ public class DietActivity extends AppCompatActivity {
                     byteData = baos.toByteArray();
                     response = new String(byteData);
 
-                    response = new String(byteData);
-
-
+                    Log.e("response",response);
 
                 }
             } catch (IOException e) {
@@ -472,7 +474,7 @@ public class DietActivity extends AppCompatActivity {
             try {
                 JSONObject responseJSON = new JSONObject(response);
                 result = (JSONObject) responseJSON.get("res_data");
-                rice = (JSONObject) result.get("Soup");
+                rice = (JSONObject) result.get("side");
                 msg = rice.getString("dietName");
                 nutrition = rice.getString("classification");
 
@@ -480,17 +482,23 @@ public class DietActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            soupitem = new DietItem(msg,nutrition);
+            Log.e("response",msg + nutrition);
+
+            firstitem = new DietItem(msg,nutrition);
             dietAdapter_first.addItem(firstitem);
+            recyclerViewfirst.setAdapter(dietAdapter_first);
+            firstname=firstitem.getName();
+            firstlist.add(firstname);
         }
     }
 
-    public class GetSecond extends AsyncTask<Void, Void, String> {
+    public static class GetSide2 extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
 
             String response = null;
+            JSONObject jsonObject_second = new JSONObject();
 
             HttpURLConnection connection = null;
             OutputStream outputStream = null;
@@ -498,7 +506,7 @@ public class DietActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = null;
 
             try {
-                URL url = new URL(SECOND_URL);
+                URL url = new URL(SIDE2_URL);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Cache-Control", "no-cache");
@@ -509,6 +517,9 @@ public class DietActivity extends AppCompatActivity {
 
                 try {
                     jsonObject_second.put("users_age",users_age);
+                    jsonObject_second.put("riceDietName",ricename);
+                    jsonObject_second.put("soupDietName",soupname);
+                    jsonObject_second.put("sideDietName",firstname);
                     jsonObject_second.put("swipeRice", secondlist);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -531,11 +542,12 @@ public class DietActivity extends AppCompatActivity {
                     }
                     byteData = baos.toByteArray();
                     response = new String(byteData);
-
+                    Log.e("response",response);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
 
             return response;
         }
@@ -550,7 +562,7 @@ public class DietActivity extends AppCompatActivity {
             try {
                 JSONObject responseJSON = new JSONObject(response);
                 result = (JSONObject) responseJSON.get("res_data");
-                rice = (JSONObject) result.get("Soup");
+                rice = (JSONObject) result.get("side");
                 msg = rice.getString("dietName");
                 nutrition = rice.getString("classification");
 
@@ -558,8 +570,13 @@ public class DietActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            soupitem = new DietItem(msg,nutrition);
+            Log.e("response",msg + nutrition);
+
+            seconditem = new DietItem(msg,nutrition);
             dietAdapter_second.addItem(seconditem);
+            recyclerViewsecond.setAdapter(dietAdapter_second);
+            secondname=seconditem.getName();
+            secondlist.add(secondname);
         }
     }
 }
