@@ -201,6 +201,12 @@ public class DietActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DietActivity.this,DietinfoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("ricename",ricename);
+                bundle.putString("soupname",soupname);
+                bundle.putString("side1name",firstname);
+                bundle.putString("side2name",secondname);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
             }
@@ -254,6 +260,7 @@ public class DietActivity extends AppCompatActivity {
 
                 try {
                     jsonObject_rice.put("users_age",users_age);
+                    jsonObject_rice.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_rice.put("swipeRice", ricelist);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -343,6 +350,7 @@ public class DietActivity extends AppCompatActivity {
 
                 try {
                     jsonObject_soup.put("users_age",users_age);
+                    jsonObject_soup.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_soup.put("riceDietName",ricename);
                     jsonObject_soup.put("swipeSoup", souplist);
                 } catch (JSONException e) {
@@ -429,6 +437,7 @@ public class DietActivity extends AppCompatActivity {
 
                 try {
                     jsonObject_first.put("users_age",users_age);
+                    jsonObject_first.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_first.put("riceDietName",ricename);
                     jsonObject_first.put("soupDietName",soupname);
                     jsonObject_first.put("swipeSide", firstlist);
@@ -517,10 +526,11 @@ public class DietActivity extends AppCompatActivity {
 
                 try {
                     jsonObject_second.put("users_age",users_age);
+                    jsonObject_second.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_second.put("riceDietName",ricename);
                     jsonObject_second.put("soupDietName",soupname);
                     jsonObject_second.put("sideDietName",firstname);
-                    jsonObject_second.put("swipeRice", secondlist);
+                    jsonObject_second.put("swipeSide", secondlist);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
