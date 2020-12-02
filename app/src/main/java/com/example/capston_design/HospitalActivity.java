@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ListAdapter;
@@ -28,6 +29,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -54,16 +56,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class HospitalActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private Context context =this;
     Button findhosp, addcal;
-    HashMap<String,String> cal_contact = new HashMap<>();
+    ArrayList<HashMap<String,String>> cal_list = new ArrayList<>();
     ArrayList<CalendarDay> dates=new ArrayList<>();
     MaterialCalendarView CalendarView;
     ListView listView;
+    JSONArray cal_array = new JSONArray();
 
     private String CALPOST_URL="http://13.125.245.6:3000/api/calendars/postCalendars";
 
@@ -205,33 +210,46 @@ public class HospitalActivity extends AppCompatActivity {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
 
+                Log.e("claview","실행");
 
-                ArrayList<HashMap<String,String>> cal_list = new ArrayList<>();
+                ArrayList<HashMap<String,String>> cal_list2 = new ArrayList<>();
 
-                for (String key : cal_contact.keySet()){
-                    String[] dayarray = key.split("-");
+                for (int i=0;i<cal_list.size();i++){
+                    Set key = cal_list.get(i).keySet();
+                    String txtkey=key.toString().replace("[","");
+                    String realkey = key.toString();
+                    Log.e("cla_list",key.toString());
+                    Log.e("cla_list",cal_list.get(i).toString());
+
+                    String[] contentarray = cal_list.get(i).toString().split("=");
+                    String txtcontent = contentarray[1].replace("}","");
+
+                    String[] dayarray = txtkey.split("-");
                     int year = Integer.parseInt(dayarray[0]);
                     int month = Integer.parseInt(dayarray[1]);
                     String[] dayarray2= dayarray[2].split("T");
                     int day = Integer.parseInt(dayarray2[0]);
                     String[] time = dayarray2[1].split(":");
-                    int hour=Integer.parseInt(time[0]);
-                    int min = Integer.parseInt(time[1]);
+                    String hour=time[0];
+                    String min = time[1];
 
-                    if ((year==date.getYear())&&(month==date.getMonth())&&(day==date.getDay())){
+
+                    if ((year==date.getYear())&&(month-1==date.getMonth())&&(day==date.getDay())){
                         HashMap<String, String> hash_content = new HashMap<>();
                         hash_content.put("date",year+"-"+month+"-"+day);
                         hash_content.put("time",hour+":"+min);
-                        hash_content.put("content",cal_contact.get(key));
+                        hash_content.put("content",txtcontent);
 
-                        cal_list.add(hash_content);
+                        cal_list2.add(hash_content);
+                        Log.e("cla_list",cal_list2.toString());
                     }
                 }
 
-                ListAdapter content_adapter = new SimpleAdapter(context,cal_list,R.layout.hosp_calcontent_list
+
+                ListAdapter content_adapter = new SimpleAdapter(context,cal_list2,R.layout.hosp_calcontent_list
                         ,new String[]{"date","time","content"}
                         , new int[]{R.id.hosplist_date,R.id.hosplist_time,R.id.hosplist_content});
-                listView.setAdapter(content_adapter);
+                listView.setAdapter( content_adapter);
 
 
             }
@@ -253,23 +271,27 @@ public class HospitalActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids){
             HttpHandler cal = new HttpHandler();
 
-            String GETCAL_URL = "http://13.125.245.6:3000/api/calendars/getCalendars";
+            String GETCAL_URL = "http://13.125.245.6:3000/api/calendars/getCalendars?users_id=chlrkdgml11@naver.com";
             String cal_json = cal.makeServiceCall(GETCAL_URL);
             if (cal_json !=null){
                 try {
                     JSONObject jsonObject = new JSONObject(cal_json);
 
-                    JSONArray cal_array = jsonObject.getJSONArray("res_data");
+                    cal_array=new JSONArray();
+                    cal_array = jsonObject.getJSONArray("res_data");
+                    Log.e("cal",cal_array.toString());
                     for (int i=0;i<cal_array.length();i++){
                         JSONObject data = cal_array.getJSONObject(i);
 
+
                         String id=data.getString("users_id");
-                        String date = data.getString("data");
+                        String date = data.getString("date");
                         String content = data.getString("content");
 
+                        HashMap<String,String> cal_contact = new HashMap<>();
                         cal_contact.put(date,content);
+                        cal_list.add(cal_contact);
 
-                        //cal_list.add(cal_contact);
                     }
                 } catch (JSONException e){
                     e.printStackTrace();
@@ -284,21 +306,24 @@ public class HospitalActivity extends AppCompatActivity {
 
             Calendar calendar = Calendar.getInstance();
 
-            for (String key : cal_contact.keySet()){
-                String[] dayarray = key.split("-");
+            for (int i=0;i<cal_list.size();i++){
+                Set key = cal_list.get(i).keySet();
+                String txtkey=key.toString().replace("[","");
+
+                String[] dayarray = txtkey.split("-");
                 int year = Integer.parseInt(dayarray[0]);
-                int month = Integer.parseInt(dayarray[1]);
+                int month = Integer.parseInt(dayarray[1])-1;
                 String[] dayarray2= dayarray[2].split("T");
                 int day = Integer.parseInt(dayarray2[0]);
+
+                Log.e("cal2",String.valueOf(year)+String.valueOf(month)+String.valueOf(day));
 
                 calendar.set(year,month,day);
                 CalendarDay calendarDay = CalendarDay.from(calendar);
                 dates.add(calendarDay);
-
             }
 
             CalendarView.addDecorator(new EventDecorator(Color.RED,dates));
-
 
         }
     }
@@ -313,6 +338,7 @@ public class HospitalActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     class SaturdayDecorator implements DayViewDecorator{
         private final Calendar calendar = Calendar.getInstance();

@@ -47,7 +47,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             app:mcv_selectionColor="#b2ebf2"
-            app:mcv_showOtherDates="all"/>
+            app:mcv_showOtherDates="all"
+            />
 
         <TextView
             android:id="@+id/hosp_tv_calendar"
