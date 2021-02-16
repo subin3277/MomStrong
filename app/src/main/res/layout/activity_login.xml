@@ -58,6 +58,18 @@
         android:hint="비밀번호"
         android:inputType="textPassword"/>
 
+
+    <Button
+        android:id="@+id/login_btn_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="test"
+        android:textSize="30sp"
+        android:background="#ffffff"
+        android:layout_marginTop="20dp"
+
+        />
     <Button
         android:id="@+id/login_btn_login"
         android:layout_width="wrap_content"
@@ -91,5 +103,6 @@
         android:layout_marginTop="20dp"
 
         />
+
 
 </LinearLayout>

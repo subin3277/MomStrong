@@ -70,8 +70,6 @@ public class HospitalActivity extends AppCompatActivity {
     ListView listView;
     JSONArray cal_array = new JSONArray();
 
-    private String CALPOST_URL="http://13.125.245.6:3000/api/calendars/postCalendars";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +140,11 @@ public class HospitalActivity extends AppCompatActivity {
         addcal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Intent intent = new Intent(HospitalActivity.this,AddcalActivity.class);
+                startActivity(intent);
+
+/*
                 final AddCalendarDialog dialog = new AddCalendarDialog(HospitalActivity.this, new CustomDialogClickListener() {
                     @Override
                     public void onPositiveClick() {
@@ -202,7 +205,7 @@ public class HospitalActivity extends AppCompatActivity {
                         }
 
                     }
-                });
+                });*/
             }
         });
 

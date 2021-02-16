@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -19,7 +21,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DietinfoActivity"/>
+
+        <receiver android:name=".Alarm_Receiver" />
+
+        <service
+            android:name=".RingtonPlayingService"
+            android:enabled="true" />
+
+        <activity android:name=".CameraActivity"/>
+        <activity android:name=".TestActivity"/>
+        <activity android:name=".AddcalActivity" />
+        <activity android:name=".DietinfoActivity" />
         <activity android:name=".YogainfoActivity" />
         <activity android:name=".Yoga1stActivity" />
         <activity android:name=".Signup2Activity" />
@@ -29,14 +41,14 @@
         <activity android:name=".DietActivity" />
         <activity android:name=".FindhospitalActivity" />
         <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivity" >
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

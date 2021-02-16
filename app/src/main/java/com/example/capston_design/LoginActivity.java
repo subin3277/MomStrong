@@ -24,6 +24,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.tensorflow.lite.examples.posenet.lib.Posenet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -56,6 +57,18 @@ public class LoginActivity extends AppCompatActivity {
         id = findViewById(R.id.login_et_id);
         password = findViewById(R.id.login_et_password);
         login=findViewById(R.id.login_btn_login);
+
+
+        Button test = findViewById(R.id.login_btn_test);
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, CameraActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override

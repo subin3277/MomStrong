@@ -23,7 +23,7 @@ public class Yoga1stActivity extends AppCompatActivity {
     RecyclerView listview;
     YogaAdapter adapter;
 
-    private String YOGA1st_URL = "http://13.125.245.6:5000/getYogas?trimester=1st";
+    private String YOGA1st_URL = "http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

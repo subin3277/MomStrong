@@ -48,7 +48,7 @@ public class Signup2Activity extends AppCompatActivity {
 
         name = findViewById(R.id.signup2_et_name);
         age = findViewById(R.id.signup2_et_age);
-        weight = findViewById(R.id.signup2_et_weight);
+        //weight = findViewById(R.id.signup2_et_weight);
         signupbtn = findViewById(R.id.signup2_btn);
         backbtn=findViewById(R.id.signup2_backbtn);
 
@@ -88,11 +88,11 @@ public class Signup2Activity extends AppCompatActivity {
                 txtname = name.getText().toString();
                 txtage = age.getText().toString();
 
-                txtweight = weight.getText().toString();
+                //txtweight = weight.getText().toString();
 
                 txtdate = expecteddate.getText().toString();
 
-                if ((txtname.equals(""))||(txtage.equals(""))||(txtweight.equals(""))||(txtdate.equals(""))){
+                if ((txtname.equals(""))||(txtage.equals(""))||(txtdate.equals(""))){
                     Toast.makeText(Signup2Activity.this,"모든 항목을 입력해주세요.",Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -181,7 +181,7 @@ public class Signup2Activity extends AppCompatActivity {
                     jsonObject.put("pw2",password2);
                     jsonObject.put("userName",txtname);
                     jsonObject.put("age",txtage);
-                    jsonObject.put("weight",txtweight);
+                    //jsonObject.put("weight",txtweight);
                     jsonObject.put("expectedDate",txtdate+"T00:00:00.000Z");
 
                 } catch (JSONException e){

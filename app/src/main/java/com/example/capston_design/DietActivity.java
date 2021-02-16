@@ -259,6 +259,7 @@ public class DietActivity extends AppCompatActivity {
                 connection.setDoInput(true);
 
                 try {
+                    //userid 추가(모든 post에서)
                     jsonObject_rice.put("users_age",users_age);
                     jsonObject_rice.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_rice.put("swipeRice", ricelist);

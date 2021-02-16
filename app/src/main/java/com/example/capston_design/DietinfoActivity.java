@@ -28,7 +28,6 @@ public class DietinfoActivity extends AppCompatActivity {
         soup.setText(soupname);
         side1.setText(side1name);
         side2.setText(side2name);
-
-
+        
     }
 }

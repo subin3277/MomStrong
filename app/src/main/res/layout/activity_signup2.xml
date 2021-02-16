@@ -107,6 +107,7 @@
         android:gravity="center_vertical"
         android:textColor="#000000"
         />
+<!--
 
     <TextView
         android:id="@+id/signup2_tv_weight"
@@ -132,6 +133,7 @@
         android:textColor="#000000"
         />
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -142,14 +144,14 @@
         app:layout_constraintBottom_toBottomOf="@id/signup2_et_weight"
         android:layout_marginRight="20dp"
         />
-
+    -->
     <Button
         android:id="@+id/signup2_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="완료"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/signup2_et_weight"
+        app:layout_constraintTop_toBottomOf="@id/signup2_et_date"
         app:layout_constraintRight_toRightOf="@id/guideline2"
         android:layout_marginTop="10dp"/>
 
@@ -159,7 +161,7 @@
         android:layout_height="wrap_content"
         android:text="이전"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/signup2_et_weight"
+        app:layout_constraintTop_toBottomOf="@id/signup2_et_date"
         app:layout_constraintLeft_toLeftOf="@id/guideline"
         android:layout_marginTop="10dp"/>
 
