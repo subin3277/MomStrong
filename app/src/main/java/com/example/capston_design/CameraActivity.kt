@@ -18,7 +18,6 @@ package com.example.capston_design;
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.capston_design.R
 
 class CameraActivity : AppCompatActivity() {
 
@@ -26,8 +25,7 @@ class CameraActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.tfe_pn_activity_camera)
     savedInstanceState ?: supportFragmentManager.beginTransaction()
-      .replace(R.id.container, PosenetActivity())
-      .commit()
-
+            .replace(R.id.container, PosenetActivity())
+            .commit()
   }
 }

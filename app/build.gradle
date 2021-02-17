@@ -26,6 +26,10 @@ android {
         }
     }
 
+    compileOptions{
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     aaptOptions { noCompress "tflite" }
 
 }
@@ -51,6 +55,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version" // 코틀린 혼용 사용을 위해 추가
     implementation 'com.squareup.retrofit2:retrofit:2.8.1' //retrofit사용
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1' //retrofit 사용
+    implementation 'com.squareup.picasso:picasso:2.71828' //Picasso 사용
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

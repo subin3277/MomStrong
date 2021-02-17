@@ -23,6 +23,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.hardware.camera2.*
 import android.media.Image
 import android.media.ImageReader
@@ -38,6 +39,10 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.squareup.picasso.Picasso
+import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -48,6 +53,7 @@ import org.tensorflow.lite.examples.posenet.lib.Position
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.concurrent.Semaphore
@@ -106,7 +112,7 @@ class PosenetActivity :
 
   /** A [SurfaceView] for camera preview.   */
   private var surfaceView: SurfaceView? = null
-  private lateinit var imageview: ImageView
+  private var surfaceView2: SurfaceView? = null
 
   /** A [CameraCaptureSession] for camera preview.   */
   private var captureSession: CameraCaptureSession? = null
@@ -158,6 +164,11 @@ class PosenetActivity :
 
   /** Abstract interface to someone holding a display surface.    */
   private var surfaceHolder: SurfaceHolder? = null
+  private var surfaceHolder2: SurfaceHolder? = null
+
+  private var client = OkHttpClient()
+  var pathlist: ArrayList<String> = ArrayList()
+
 
   /** [CameraDevice.StateCallback] is called when [CameraDevice] changes its state.   */
   private val stateCallback = object : CameraDevice.StateCallback() {
@@ -217,14 +228,17 @@ class PosenetActivity :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     surfaceView = view.findViewById(R.id.surfaceView)
+    surfaceView2=view.findViewById(R.id.surfaceView2)
 
     val display = requireActivity().windowManager.defaultDisplay
     val size = Point()
     display.getSize(size)
 
-    GetYogaImage()
+    run("http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st")
+
 
     surfaceHolder = surfaceView!!.holder
+    surfaceHolder2 = surfaceView2!!.holder
   }
 
   override fun onResume() {
@@ -539,14 +553,14 @@ class PosenetActivity :
     )
 
     val widthRatio = screenWidth.toFloat() / MODEL_WIDTH
-    val heightRatio = screenHeight.toFloat() / MODEL_HEIGHT
+    val heightRatio = screenHeight.toFloat() / (MODEL_HEIGHT)
 
     // Draw key points over the image.
     for (keyPoint in person.keyPoints) {
       if (keyPoint.score > minConfidence) {
         val position = keyPoint.position
-        val adjustedX: Float = position.x.toFloat() * widthRatio + left
-        val adjustedY: Float = position.y.toFloat() * heightRatio + top
+        val adjustedX: Float = screenWidth-(position.x.toFloat() * widthRatio + left)
+        val adjustedY: Float = position.y.toFloat() * heightRatio +top
         canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
       }
     }
@@ -557,10 +571,10 @@ class PosenetActivity :
         (person.keyPoints[line.second.ordinal].score > minConfidence)
       ) {
         canvas.drawLine(
-          person.keyPoints[line.first.ordinal].position.x.toFloat() * widthRatio + left,
-          person.keyPoints[line.first.ordinal].position.y.toFloat() * heightRatio + top,
-          person.keyPoints[line.second.ordinal].position.x.toFloat() * widthRatio + left,
-          person.keyPoints[line.second.ordinal].position.y.toFloat() * heightRatio + top,
+          screenWidth-(person.keyPoints[line.first.ordinal].position.x.toFloat() * widthRatio + left),
+          person.keyPoints[line.first.ordinal].position.y.toFloat() * heightRatio+top,
+          screenWidth-(person.keyPoints[line.second.ordinal].position.x.toFloat() * widthRatio + left),
+          person.keyPoints[line.second.ordinal].position.y.toFloat() * heightRatio+top,
           paint
         )
 
@@ -580,35 +594,82 @@ class PosenetActivity :
     }
 
 
-/*
-
-    canvas.drawText(
-      "Score: %.2f".format(person.score),
-      (15.0f * widthRatio),
-      (30.0f * heightRatio + bottom),
-      paint
-    )
-    canvas.drawText(
-      "Device: %s".format(posenet.device),
-      (15.0f * widthRatio),
-      (50.0f * heightRatio + bottom),
-      paint
-    )
-    canvas.drawText(
-      "Time: %.2f ms".format(posenet.lastInferenceTimeNanos * 1.0f / 1_000_000),
-      (15.0f * widthRatio),
-      (70.0f * heightRatio + bottom),
-      paint
-    )
-
-*/
-
 
 
     // Draw!
     surfaceHolder!!.unlockCanvasAndPost(canvas)
   }
 
+  private fun drawinimage(canvas: Canvas, person: Person, bitmap: Bitmap) {
+    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
+    // Draw `bitmap` and `person` in square canvas.
+    val screenWidth: Int
+    val screenHeight: Int
+    val left: Int
+    val right: Int
+    val top: Int
+    val bottom: Int
+
+    if (canvas.height > canvas.width) {
+      screenWidth = canvas.width
+      screenHeight = canvas.width
+      left = 0
+      top = (canvas.height - canvas.width) / 2
+    } else {
+      screenWidth = canvas.height
+      screenHeight = canvas.height
+      left = (canvas.width - canvas.height) / 2
+      top = 0
+    }
+    right = left + screenWidth
+    bottom = top + screenHeight
+
+    val display = requireActivity().windowManager.defaultDisplay
+    val size = Point()
+    display.getSize(size)
+
+    setPaint()
+    canvas.drawBitmap(
+            bitmap,
+            Rect(0, 0, bitmap.width, bitmap.height),
+            Rect(0, size.y-screenHeight, 0, 0),
+            paint
+    )
+
+    val widthRatio = screenWidth.toFloat() / bitmap.width
+    val heightRatio = screenHeight.toFloat() / bitmap.height
+
+    // Draw key points over the image.
+    for (keyPoint in person.keyPoints) {
+      if (keyPoint.score > minConfidence) {
+        val position = keyPoint.position
+        val adjustedX: Float = screenWidth-(position.x.toFloat() * widthRatio + left)
+        val adjustedY: Float = position.y.toFloat() * heightRatio +top
+        canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
+      }
+    }
+
+    for (line in bodyJoints) {
+      if (
+              (person.keyPoints[line.first.ordinal].score > minConfidence) and
+              (person.keyPoints[line.second.ordinal].score > minConfidence)
+      ) {
+        canvas.drawLine(
+                screenWidth-(person.keyPoints[line.first.ordinal].position.x.toFloat() * widthRatio + left),
+                person.keyPoints[line.first.ordinal].position.y.toFloat() * heightRatio+top,
+                screenWidth-(person.keyPoints[line.second.ordinal].position.x.toFloat() * widthRatio + left),
+                person.keyPoints[line.second.ordinal].position.y.toFloat() * heightRatio+top,
+                paint
+        )
+
+      }
+    }
+
+
+
+    // Draw!
+    surfaceHolder2!!.unlockCanvasAndPost(canvas)
+  }
   /** Process image using Posenet library.   */
   private fun processImage(bitmap: Bitmap) {
     // Crop bitmap.
@@ -738,52 +799,48 @@ class PosenetActivity :
   }
 
 
-  class GetYogaImage():AsyncTask<Void, Void, Void>(){
+  fun run(url :String){
+    val request = Request.Builder().url(url).build()
 
-    lateinit var temp:String
 
-    override fun doInBackground(vararg params:Void?): Void? {
-
-      val stream = URL("http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st").openStream()
-      val read = BufferedReader(InputStreamReader(stream,"UTF-8"))
-      temp = read.readLine()
-
-      Log.e("json: ",temp)
-      return null
-    }
-
-    override fun onPostExecute(result: Void?) {
-      super.onPostExecute(result)
-
-      try {
-        val json = JSONObject(temp)
-        val array = json.getJSONArray("res_data")
-
-        for (i in 0 until array.length()){
-          var yogainfo = array.getJSONObject(i)
-
-          val pose = yogainfo.getString("pose")
-          val path = yogainfo.getString("path")
-        }
-      } catch (e:JSONException){
-        e.printStackTrace()
+    client.newCall(request).enqueue(object : Callback {
+      override fun onFailure(call: Call, e: IOException) {
+        Log.e("result",e.toString())
       }
-    }
+
+      override fun onResponse(call: Call, response: Response) {
+        var str_reponse = response.body()!!.string()
+
+        val json_contact:JSONObject = JSONObject(str_reponse)
+        var jsonarray_info:JSONArray=json_contact.getJSONArray("res_data")
+        var i:Int = 0
+        var size: Int = jsonarray_info.length()
+
+        for (i in 0..size-1){
+          var json_ob:JSONObject=jsonarray_info.getJSONObject(i)
+          var path:String = json_ob.get("path") as String
+          pathlist.add(path)
+          Log.e("json", path.toString())
+        }
+
+        setImage(pathlist.get(0))
+      }
+    })
   }
 
-  class URLtoBitmapTask() : AsyncTask<Void, Void, Bitmap>() {
-    lateinit var url:URL
-    override fun doInBackground(vararg params: Void?): Bitmap {
-      val bitmap = BitmapFactory.decodeStream(url.openStream())
-      return bitmap
-    }
-    override fun onPreExecute() {
-      super.onPreExecute()
+  fun setImage(url: String){
+    
+    Glide.with(this).asBitmap().load(url).into(object : CustomTarget<Bitmap>() {
+      override fun onLoadCleared(placeholder: Drawable?) {
 
-    }
-    override fun onPostExecute(result: Bitmap) {
-      super.onPostExecute(result)
-    }
+      }
+
+      override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+        val person = posenet.estimateSinglePose(resource)
+        val canvas: Canvas = surfaceHolder2!!.lockCanvas()
+        draw(canvas, person, resource)
+      }
+    })
   }
 
   fun getAngle(a: Position, b: Position, c: Position): Double {

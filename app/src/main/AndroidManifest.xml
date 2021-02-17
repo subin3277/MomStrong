@@ -30,7 +30,6 @@
             android:enabled="true" />
 
         <activity android:name=".CameraActivity" />
-
         <activity android:name=".AddcalActivity" />
         <activity android:name=".DietinfoActivity" />
         <activity android:name=".YogainfoActivity" />

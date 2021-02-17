@@ -38,6 +38,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -48,6 +49,7 @@ import org.tensorflow.lite.examples.posenet.lib.Position
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.concurrent.Semaphore
@@ -158,6 +160,8 @@ class PosenetFragment :
 
     /** Abstract interface to someone holding a display surface.    */
     private var surfaceHolder: SurfaceHolder? = null
+
+    private var client = OkHttpClient()
 
     /** [CameraDevice.StateCallback] is called when [CameraDevice] changes its state.   */
     private val stateCallback = object : CameraDevice.StateCallback() {
@@ -583,6 +587,7 @@ class PosenetFragment :
         }
 
 
+        run("http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st")
 /*
 
     canvas.drawText(
@@ -740,38 +745,32 @@ class PosenetFragment :
         private const val TAG = "PosenetActivity"
     }
 
+    fun run(url :String){
+        Log.e("result","2")
+        val request = Request.Builder().url(url).build()
 
-    class GetYogaImage():AsyncTask<Void, Void, Void>(){
-
-        lateinit var temp:String
-
-        override fun doInBackground(vararg params:Void?): Void? {
-
-            val stream = URL("http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st").openStream()
-            val read = BufferedReader(InputStreamReader(stream,"UTF-8"))
-            temp = read.readLine()
-
-            Log.e("json: ",temp)
-            return null
-        }
-
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
-
-            try {
-                val json = JSONObject(temp)
-                val array = json.getJSONArray("res_data")
-
-                for (i in 0 until array.length()){
-                    var yogainfo = array.getJSONObject(i)
-
-                    val pose = yogainfo.getString("pose")
-                    val path = yogainfo.getString("path")
-                }
-            } catch (e:JSONException){
-                e.printStackTrace()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("result",e.toString())
             }
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                Log.e("result","4")
+                var str_reponse = response.body()!!.string()
+
+                Log.e("object:",str_reponse)
+                val json_contact:JSONObject = JSONObject(str_reponse)
+                var jsonarray_info:JSONArray=json_contact.getJSONArray("res_data")
+                var i:Int = 0
+                var size: Int = jsonarray_info.length()
+
+                for (i in 0..size-1){
+                    var json_ob:JSONObject=jsonarray_info.getJSONObject(i)
+                    var path = json_ob.get("path")
+                    Log.e("json", path.toString())
+                }
+            }
+        })
     }
 
     class URLtoBitmapTask() : AsyncTask<Void, Void, Bitmap>() {

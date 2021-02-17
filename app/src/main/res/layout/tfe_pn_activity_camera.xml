@@ -13,26 +13,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<LinearLayout
+
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="10"
-    >
-
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"
-        android:background="@android:color/white"
-        tools:context="com.example.capston_design.CameraActivity"
-        />
-    <ImageView
-        android:id="@+id/imagepreview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"/>
-</LinearLayout>
+    android:background="@android:color/white"
+    tools:context="com.example.capston_design.CameraActivity"
+    />

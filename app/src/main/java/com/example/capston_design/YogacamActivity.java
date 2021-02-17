@@ -2,6 +2,7 @@ package com.example.capston_design;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.tensorflow.lite.examples.posenet.lib.Device;
 import org.tensorflow.lite.examples.posenet.lib.KeyPoint;
 import org.tensorflow.lite.examples.posenet.lib.Person;
 import org.tensorflow.lite.examples.posenet.lib.Posenet;
@@ -54,12 +56,14 @@ public class YogacamActivity extends AppCompatActivity {
         posenetFragment = new PosenetFragment();
         imagepreview = findViewById(R.id.imagepreview);
 
+        posenet = new Posenet(this,"posenet_model.tflite", Device.CPU);
+
+        new GetYoga1st().execute();
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, posenetFragment).commit();
 
-        Person person = posenet.estimateSinglePose(bitmap);
-        Canvas canvas = surfaceHolder.lockCanvas();
-        Draw(canvas,person,bitmap);
+
 
     }
 
@@ -88,13 +92,10 @@ public class YogacamActivity extends AppCompatActivity {
         float widthRatio = (float) width / (float)257.00;
         float heightRatio = (float) point.y / (float)257.00;
 
-        List<KeyPoint> var15 = person.getKeyPoints();
-        KeyPoint keyPoint = null;
 
-        
-        for (var15.contains(keyPoint)){
-            if ((double)keyPoint.getScore() > 0.5) {
-                Position position = keyPoint.getPosition();
+        for (KeyPoint keypoint: person.getKeyPoints()){
+            if ((double)keypoint.getScore() > 0.5) {
+                Position position = keypoint.getPosition();
                 float adjustedX = (float)position.getX() * widthRatio;
                 float adjustedY = (float)position.getY() * heightRatio;
                 canvas.drawCircle(adjustedX, adjustedY, 8.0f, this.paint);
@@ -140,6 +141,9 @@ public class YogacamActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             bitmap=getImageFromURL(firstlist.get(0).path);
+            Person person = posenet.estimateSinglePose(bitmap);
+            Canvas canvas = surfaceHolder.lockCanvas();
+            Draw(canvas,person,bitmap);
         }
     }
 
