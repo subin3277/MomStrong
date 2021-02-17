@@ -28,5 +28,6 @@ class CameraActivity : AppCompatActivity() {
     savedInstanceState ?: supportFragmentManager.beginTransaction()
       .replace(R.id.container, PosenetActivity())
       .commit()
+
   }
 }

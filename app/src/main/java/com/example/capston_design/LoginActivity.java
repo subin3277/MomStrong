@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, CameraActivity.class);
+                Intent intent = new Intent(LoginActivity.this, YogacamActivity.class);
                 startActivity(intent);
                 finish();
             }

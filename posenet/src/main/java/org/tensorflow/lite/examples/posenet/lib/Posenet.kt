@@ -274,8 +274,6 @@ class Posenet(
       //Log.e("점의 좌표", keypointList[idx].position.x.toString()+","+keypointList[idx].position.y.toString())
     }
 
-
-
     person.keyPoints = keypointList.toList()
     person.score = totalScore / numKeypoints
 
