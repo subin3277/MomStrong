@@ -53,6 +53,7 @@ import org.tensorflow.lite.examples.posenet.lib.Position
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
@@ -168,6 +169,8 @@ class PosenetActivity :
 
   private var client = OkHttpClient()
   var pathlist: ArrayList<String> = ArrayList()
+  private val IMAGEWEIGHT = 257
+  private val IMAGEHEIGHT = 125
 
 
   /** [CameraDevice.StateCallback] is called when [CameraDevice] changes its state.   */
@@ -508,6 +511,42 @@ class PosenetActivity :
     return croppedBitmap
   }
 
+  private fun imagecropBitmap(bitmap: Bitmap): Bitmap {
+    val bitmapRatio = bitmap.height.toFloat() / bitmap.width
+    val modelInputRatio = IMAGEHEIGHT.toFloat() / IMAGEWEIGHT
+    var croppedBitmap = bitmap
+
+    // Acceptable difference between the modelInputRatio and bitmapRatio to skip cropping.
+    val maxDifference = 1e-5
+
+    // Checks if the bitmap has similar aspect ratio as the required model input.
+    when {
+      abs(modelInputRatio - bitmapRatio) < maxDifference -> return croppedBitmap
+      modelInputRatio < bitmapRatio -> {
+        // New image is taller so we are height constrained.
+        val cropHeight = bitmap.height - (bitmap.width.toFloat() / modelInputRatio)
+        croppedBitmap = Bitmap.createBitmap(
+                bitmap,
+                0,
+                0,
+                bitmap.width,
+                (bitmap.height - cropHeight).toInt()
+        )
+      }
+      else -> {
+        val cropWidth = bitmap.width - (bitmap.height.toFloat() * modelInputRatio)
+        croppedBitmap = Bitmap.createBitmap(
+                bitmap,
+                (cropWidth / 2).toInt(),
+                0,
+                (bitmap.width - cropWidth).toInt(),
+                bitmap.height
+        )
+      }
+    }
+    return croppedBitmap
+  }
+
   /** Set the paint color and size.    */
   private fun setPaint() {
     paint.color = Color.RED
@@ -556,15 +595,33 @@ class PosenetActivity :
     val heightRatio = screenHeight.toFloat() / (MODEL_HEIGHT)
 
     // Draw key points over the image.
-    for (keyPoint in person.keyPoints) {
+    var i=0
+    for (i in 0..person.keyPoints.size-1){
+      if (person.keyPoints[i].score>minConfidence){
+        //imageKeyPoints[i].bodyPart = person.keyPoints[i].bodyPart
+        //imageKeyPoints[i].position = person.keyPoints[i].position
+        val position = person.keyPoints[i].position
+        val adjustedX: Float = screenWidth-(position.x.toFloat() * widthRatio + left)
+        val adjustedY: Float = position.y.toFloat() * heightRatio +top
+        canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
+      }
+
+    }
+
+    /*for (keyPoint in person.keyPoints) {
       if (keyPoint.score > minConfidence) {
         val position = keyPoint.position
         val adjustedX: Float = screenWidth-(position.x.toFloat() * widthRatio + left)
         val adjustedY: Float = position.y.toFloat() * heightRatio +top
         canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
-      }
-    }
 
+        Log.e("(x,y):",adjustedX.toString()+","+adjustedY.toString())
+
+      }
+      i++
+      Log.e("keypoint",i.toString()+","+keyPoint.bodyPart)
+    }
+*/
     for (line in bodyJoints) {
       if (
         (person.keyPoints[line.first.ordinal].score > minConfidence) and
@@ -640,6 +697,7 @@ class PosenetActivity :
     val heightRatio = screenHeight.toFloat() / bitmap.height
 
     // Draw key points over the image.
+
     for (keyPoint in person.keyPoints) {
       if (keyPoint.score > minConfidence) {
         val position = keyPoint.position
@@ -647,6 +705,7 @@ class PosenetActivity :
         val adjustedY: Float = position.y.toFloat() * heightRatio +top
         canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
       }
+
     }
 
     for (line in bodyJoints) {
@@ -836,11 +895,26 @@ class PosenetActivity :
       }
 
       override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-        val person = posenet.estimateSinglePose(resource)
+
+        val croppedBitmap = imagecropBitmap(resource)
+
+        // Created scaled version of bitmap for model input.
+        val scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true)
+
+        val person = posenet.estimateSinglePose(scaledBitmap)
         val canvas: Canvas = surfaceHolder2!!.lockCanvas()
-        draw(canvas, person, resource)
+        draw(canvas, person, scaledBitmap)
+
       }
     })
+  }
+
+  fun compressbitmap(bitmap: Bitmap): Bitmap {
+    var stream : ByteArrayOutputStream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG,40,stream)
+    var byteArray = stream.toByteArray()
+    var compressbitmap: Bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.size)
+    return compressbitmap
   }
 
   fun getAngle(a: Position, b: Position, c: Position): Double {
