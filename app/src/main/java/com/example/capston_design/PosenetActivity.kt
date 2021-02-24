@@ -52,10 +52,7 @@ import org.tensorflow.lite.examples.posenet.lib.Posenet
 import org.tensorflow.lite.examples.posenet.lib.Position
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.BufferedReader
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.InputStreamReader
+import java.io.*
 import java.net.URL
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
@@ -67,29 +64,25 @@ class PosenetActivity :
 
   /** List of body joints that should be connected.    */
   private val bodyJoints = listOf(
-    Pair(BodyPart.LEFT_WRIST, BodyPart.LEFT_ELBOW),
-    Pair(BodyPart.LEFT_ELBOW, BodyPart.LEFT_SHOULDER),
-    Pair(BodyPart.LEFT_SHOULDER, BodyPart.RIGHT_SHOULDER),
-    Pair(BodyPart.RIGHT_SHOULDER, BodyPart.RIGHT_ELBOW),
-    Pair(BodyPart.RIGHT_ELBOW, BodyPart.RIGHT_WRIST),
-    Pair(BodyPart.LEFT_SHOULDER, BodyPart.LEFT_HIP),
-    Pair(BodyPart.LEFT_HIP, BodyPart.RIGHT_HIP),
-    Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_SHOULDER),
-    Pair(BodyPart.LEFT_HIP, BodyPart.LEFT_KNEE),
-    Pair(BodyPart.LEFT_KNEE, BodyPart.LEFT_ANKLE),
-    Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_KNEE),
-    Pair(BodyPart.RIGHT_KNEE, BodyPart.RIGHT_ANKLE)
+          Pair(BodyPart.LEFT_WRIST, BodyPart.LEFT_ELBOW),
+          Pair(BodyPart.LEFT_ELBOW, BodyPart.LEFT_SHOULDER),
+          Pair(BodyPart.LEFT_SHOULDER, BodyPart.RIGHT_SHOULDER),
+          Pair(BodyPart.RIGHT_SHOULDER, BodyPart.RIGHT_ELBOW),
+          Pair(BodyPart.RIGHT_ELBOW, BodyPart.RIGHT_WRIST),
+          Pair(BodyPart.LEFT_SHOULDER, BodyPart.LEFT_HIP),
+          Pair(BodyPart.LEFT_HIP, BodyPart.RIGHT_HIP),
+          Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_SHOULDER),
+          Pair(BodyPart.LEFT_HIP, BodyPart.LEFT_KNEE),
+          Pair(BodyPart.LEFT_KNEE, BodyPart.LEFT_ANKLE),
+          Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_KNEE),
+          Pair(BodyPart.RIGHT_KNEE, BodyPart.RIGHT_ANKLE)
   )
 
   private val bodypoint = listOf(
-    Triple(BodyPart.LEFT_WRIST,BodyPart.LEFT_ELBOW,BodyPart.LEFT_SHOULDER),
-    Triple(BodyPart.LEFT_ELBOW,BodyPart.LEFT_SHOULDER,BodyPart.RIGHT_SHOULDER),
-    Triple(BodyPart.LEFT_SHOULDER,BodyPart.RIGHT_SHOULDER,BodyPart.RIGHT_ELBOW),
-    Triple(BodyPart.RIGHT_SHOULDER,BodyPart.RIGHT_ELBOW,BodyPart.RIGHT_WRIST),
-    Triple(BodyPart.RIGHT_HIP,BodyPart.LEFT_HIP,BodyPart.LEFT_KNEE),
-    Triple(BodyPart.LEFT_HIP,BodyPart.RIGHT_HIP,BodyPart.RIGHT_KNEE),
-    Triple(BodyPart.LEFT_HIP,BodyPart.LEFT_KNEE,BodyPart.LEFT_ANKLE),
-    Triple(BodyPart.RIGHT_HIP,BodyPart.RIGHT_KNEE,BodyPart.RIGHT_ANKLE)
+          Triple(BodyPart.LEFT_WRIST, BodyPart.LEFT_ELBOW, BodyPart.LEFT_SHOULDER),
+          Triple(BodyPart.RIGHT_SHOULDER, BodyPart.RIGHT_ELBOW, BodyPart.RIGHT_WRIST),
+          Triple(BodyPart.LEFT_HIP, BodyPart.LEFT_KNEE, BodyPart.LEFT_ANKLE),
+          Triple(BodyPart.RIGHT_HIP, BodyPart.RIGHT_KNEE, BodyPart.RIGHT_ANKLE)
   )
 
   /** 한계값 for confidence score. */
@@ -113,7 +106,7 @@ class PosenetActivity :
 
   /** A [SurfaceView] for camera preview.   */
   private var surfaceView: SurfaceView? = null
-  private var surfaceView2: SurfaceView? = null
+  private lateinit var imageview: ImageView
 
   /** A [CameraCaptureSession] for camera preview.   */
   private var captureSession: CameraCaptureSession? = null
@@ -135,6 +128,7 @@ class PosenetActivity :
 
   /** An IntArray to save image data in ARGB8888 format  */
   private lateinit var rgbBytes: IntArray
+  private lateinit var rgbBytes2: IntArray
 
   /** A ByteArray to save image data in YUV format  */
   private var yuvBytes = arrayOfNulls<ByteArray>(3)
@@ -169,8 +163,13 @@ class PosenetActivity :
 
   private var client = OkHttpClient()
   var pathlist: ArrayList<String> = ArrayList()
-  private val IMAGEWEIGHT = 257
-  private val IMAGEHEIGHT = 125
+  var rightelbowlist : ArrayList<Double> = ArrayList()
+  var leftelbowlist : ArrayList<Double> = ArrayList()
+  var rightknee : ArrayList<Double> = ArrayList()
+  var leftknee : ArrayList<Double> = ArrayList()
+  private var IMAGEWEIGHT = 257
+  private var IMAGEHEIGHT = 125
+  private var yoganum = 0
 
 
   /** [CameraDevice.StateCallback] is called when [CameraDevice] changes its state.   */
@@ -199,16 +198,16 @@ class PosenetActivity :
    */
   private val captureCallback = object : CameraCaptureSession.CaptureCallback() {
     override fun onCaptureProgressed(
-      session: CameraCaptureSession,
-      request: CaptureRequest,
-      partialResult: CaptureResult
+            session: CameraCaptureSession,
+            request: CaptureRequest,
+            partialResult: CaptureResult
     ) {
     }
 
     override fun onCaptureCompleted(
-      session: CameraCaptureSession,
-      request: CaptureRequest,
-      result: TotalCaptureResult
+            session: CameraCaptureSession,
+            request: CaptureRequest,
+            result: TotalCaptureResult
     ) {
     }
   }
@@ -224,24 +223,24 @@ class PosenetActivity :
   }
 
   override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
+          inflater: LayoutInflater,
+          container: ViewGroup?,
+          savedInstanceState: Bundle?
   ): View? = inflater.inflate(R.layout.tfe_pn_activity_posenet, container, false)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     surfaceView = view.findViewById(R.id.surfaceView)
-    surfaceView2=view.findViewById(R.id.surfaceView2)
+    imageview = view.findViewById(R.id.surfaceView2)
 
     val display = requireActivity().windowManager.defaultDisplay
     val size = Point()
     display.getSize(size)
 
+    IMAGEWEIGHT = size.x
+    IMAGEHEIGHT = (size.y*0.3).toInt()
+
     run("http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st")
-
-
     surfaceHolder = surfaceView!!.holder
-    surfaceHolder2 = surfaceView2!!.holder
   }
 
   override fun onResume() {
@@ -276,14 +275,14 @@ class PosenetActivity :
   }
 
   override fun onRequestPermissionsResult(
-    requestCode: Int,
-    permissions: Array<String>,
-    grantResults: IntArray
+          requestCode: Int,
+          permissions: Array<String>,
+          grantResults: IntArray
   ) {
     if (requestCode == REQUEST_CAMERA_PERMISSION) {
       if (allPermissionsGranted(grantResults)) {
         ErrorDialog.newInstance(getString(R.string.tfe_pn_request_permission))
-          .show(childFragmentManager, FRAGMENT_DIALOG)
+                .show(childFragmentManager, FRAGMENT_DIALOG)
       }
     } else {
       super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -307,7 +306,7 @@ class PosenetActivity :
         // We don't use a front facing camera in this sample.
         val cameraDirection = characteristics.get(CameraCharacteristics.LENS_FACING)
         if (cameraDirection != null &&
-          cameraDirection == CameraCharacteristics.LENS_FACING_BACK
+                cameraDirection == CameraCharacteristics.LENS_FACING_BACK
         ) {
           continue
         }
@@ -315,8 +314,8 @@ class PosenetActivity :
         previewSize = Size(PREVIEW_WIDTH, PREVIEW_HEIGHT)
 
         imageReader = ImageReader.newInstance(
-          PREVIEW_WIDTH, PREVIEW_HEIGHT,
-          ImageFormat.YUV_420_888, /*maxImages*/ 2
+                PREVIEW_WIDTH, PREVIEW_HEIGHT,
+                ImageFormat.YUV_420_888, /*maxImages*/ 2
         )
 
         sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION)!!
@@ -329,7 +328,7 @@ class PosenetActivity :
 
         // Check if the flash is supported.
         flashSupported =
-          characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+                characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
 
         this.cameraId = cameraId
 
@@ -343,7 +342,7 @@ class PosenetActivity :
       // Currently an NPE is thrown when the Camera2API is used but not supported on the
       // device this code runs.
       ErrorDialog.newInstance(getString(R.string.tfe_pn_camera_error))
-        .show(childFragmentManager, FRAGMENT_DIALOG)
+              .show(childFragmentManager, FRAGMENT_DIALOG)
     }
   }
 
@@ -352,7 +351,7 @@ class PosenetActivity :
    */
   private fun openCamera() {
     val permissionCamera = requireContext().checkPermission(
-      Manifest.permission.CAMERA, Process.myPid(), Process.myUid()
+            Manifest.permission.CAMERA, Process.myPid(), Process.myUid()
     )
     if (permissionCamera != PackageManager.PERMISSION_GRANTED) {
       requestCameraPermission()
@@ -443,21 +442,21 @@ class PosenetActivity :
       fillBytes(image.planes, yuvBytes)
 
       ImageUtils.convertYUV420ToARGB8888(
-        yuvBytes[0]!!,
-        yuvBytes[1]!!,
-        yuvBytes[2]!!,
-        previewWidth,
-        previewHeight,
-        /*yRowStride=*/ image.planes[0].rowStride,
-        /*uvRowStride=*/ image.planes[1].rowStride,
-        /*uvPixelStride=*/ image.planes[1].pixelStride,
-        rgbBytes
+              yuvBytes[0]!!,
+              yuvBytes[1]!!,
+              yuvBytes[2]!!,
+              previewWidth,
+              previewHeight,
+              /*yRowStride=*/ image.planes[0].rowStride,
+              /*uvRowStride=*/ image.planes[1].rowStride,
+              /*uvPixelStride=*/ image.planes[1].pixelStride,
+              rgbBytes
       )
 
       // Create bitmap from int array
       val imageBitmap = Bitmap.createBitmap(
-        rgbBytes, previewWidth, previewHeight,
-        Bitmap.Config.ARGB_8888
+              rgbBytes, previewWidth, previewHeight,
+              Bitmap.Config.ARGB_8888
       )
 
       // Create rotated version for portrait display
@@ -465,14 +464,15 @@ class PosenetActivity :
       rotateMatrix.postRotate(270.0f)
 
       val rotatedBitmap = Bitmap.createBitmap(
-        imageBitmap, 0, 0, previewWidth, previewHeight,
-        rotateMatrix, true
+              imageBitmap, 0, 0, previewWidth, previewHeight,
+              rotateMatrix, true
       )
       image.close()
 
       processImage(rotatedBitmap)
     }
   }
+
 
   /** Crop Bitmap to maintain aspect ratio of model input.   */
   private fun cropBitmap(bitmap: Bitmap): Bitmap {
@@ -490,45 +490,9 @@ class PosenetActivity :
         // New image is taller so we are height constrained.
         val cropHeight = bitmap.height - (bitmap.width.toFloat() / modelInputRatio)
         croppedBitmap = Bitmap.createBitmap(
-          bitmap,
-          0,
-          (cropHeight / 2).toInt(),
-          bitmap.width,
-          (bitmap.height - cropHeight).toInt()
-        )
-      }
-      else -> {
-        val cropWidth = bitmap.width - (bitmap.height.toFloat() * modelInputRatio)
-        croppedBitmap = Bitmap.createBitmap(
-          bitmap,
-          (cropWidth / 2).toInt(),
-          0,
-          (bitmap.width - cropWidth).toInt(),
-          bitmap.height
-        )
-      }
-    }
-    return croppedBitmap
-  }
-
-  private fun imagecropBitmap(bitmap: Bitmap): Bitmap {
-    val bitmapRatio = bitmap.height.toFloat() / bitmap.width
-    val modelInputRatio = IMAGEHEIGHT.toFloat() / IMAGEWEIGHT
-    var croppedBitmap = bitmap
-
-    // Acceptable difference between the modelInputRatio and bitmapRatio to skip cropping.
-    val maxDifference = 1e-5
-
-    // Checks if the bitmap has similar aspect ratio as the required model input.
-    when {
-      abs(modelInputRatio - bitmapRatio) < maxDifference -> return croppedBitmap
-      modelInputRatio < bitmapRatio -> {
-        // New image is taller so we are height constrained.
-        val cropHeight = bitmap.height - (bitmap.width.toFloat() / modelInputRatio)
-        croppedBitmap = Bitmap.createBitmap(
                 bitmap,
                 0,
-                0,
+                (cropHeight / 2).toInt(),
                 bitmap.width,
                 (bitmap.height - cropHeight).toInt()
         )
@@ -546,6 +510,8 @@ class PosenetActivity :
     }
     return croppedBitmap
   }
+
+
 
   /** Set the paint color and size.    */
   private fun setPaint() {
@@ -580,29 +546,29 @@ class PosenetActivity :
     bottom = top + screenHeight
 
     val matrix = Matrix()
-    matrix.preScale(-1.0f,1.0f)
-    val resizedBitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.width,bitmap.height,matrix,false)
+    matrix.preScale(-1.0f, 1.0f)
+    val resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, false)
 
     setPaint()
     canvas.drawBitmap(
-      resizedBitmap,
-      Rect(0, 0, bitmap.width, bitmap.height),
-      Rect(left, 0, right, bottom),
-      paint
+            resizedBitmap,
+            Rect(0, 0, bitmap.width, bitmap.height),
+            Rect(left, 0, right, bottom),
+            paint
     )
 
     val widthRatio = screenWidth.toFloat() / MODEL_WIDTH
-    val heightRatio = screenHeight.toFloat() / (MODEL_HEIGHT)
+    val heightRatio = screenHeight.toFloat() / MODEL_HEIGHT
 
     // Draw key points over the image.
-    var i=0
-    for (i in 0..person.keyPoints.size-1){
-      if (person.keyPoints[i].score>minConfidence){
+    var i = 0
+    for (i in 0..person.keyPoints.size - 1) {
+      if (person.keyPoints[i].score > minConfidence) {
         //imageKeyPoints[i].bodyPart = person.keyPoints[i].bodyPart
         //imageKeyPoints[i].position = person.keyPoints[i].position
         val position = person.keyPoints[i].position
-        val adjustedX: Float = screenWidth-(position.x.toFloat() * widthRatio + left)
-        val adjustedY: Float = position.y.toFloat() * heightRatio +top
+        val adjustedX: Float = screenWidth - (position.x.toFloat() * widthRatio + left)
+        val adjustedY: Float = position.y.toFloat() * heightRatio + top/2
         canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
       }
 
@@ -624,118 +590,43 @@ class PosenetActivity :
 */
     for (line in bodyJoints) {
       if (
-        (person.keyPoints[line.first.ordinal].score > minConfidence) and
-        (person.keyPoints[line.second.ordinal].score > minConfidence)
-      ) {
-        canvas.drawLine(
-          screenWidth-(person.keyPoints[line.first.ordinal].position.x.toFloat() * widthRatio + left),
-          person.keyPoints[line.first.ordinal].position.y.toFloat() * heightRatio+top,
-          screenWidth-(person.keyPoints[line.second.ordinal].position.x.toFloat() * widthRatio + left),
-          person.keyPoints[line.second.ordinal].position.y.toFloat() * heightRatio+top,
-          paint
-        )
-
-      }
-    }
-
-    for (line in bodypoint){
-      if (
-        (person.keyPoints[line.first.ordinal].score > minConfidence) and
-        (person.keyPoints[line.second.ordinal].score > minConfidence) and
-        (person.keyPoints[line.third.ordinal].score > minConfidence)
-      ){
-        getAngle(person.keyPoints[line.first.ordinal].position,
-                person.keyPoints[line.second.ordinal].position,
-                person.keyPoints[line.third.ordinal].position)
-      }
-    }
-
-
-
-
-    // Draw!
-    surfaceHolder!!.unlockCanvasAndPost(canvas)
-  }
-
-  private fun drawinimage(canvas: Canvas, person: Person, bitmap: Bitmap) {
-    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-    // Draw `bitmap` and `person` in square canvas.
-    val screenWidth: Int
-    val screenHeight: Int
-    val left: Int
-    val right: Int
-    val top: Int
-    val bottom: Int
-
-    if (canvas.height > canvas.width) {
-      screenWidth = canvas.width
-      screenHeight = canvas.width
-      left = 0
-      top = (canvas.height - canvas.width) / 2
-    } else {
-      screenWidth = canvas.height
-      screenHeight = canvas.height
-      left = (canvas.width - canvas.height) / 2
-      top = 0
-    }
-    right = left + screenWidth
-    bottom = top + screenHeight
-
-    val display = requireActivity().windowManager.defaultDisplay
-    val size = Point()
-    display.getSize(size)
-
-    setPaint()
-    canvas.drawBitmap(
-            bitmap,
-            Rect(0, 0, bitmap.width, bitmap.height),
-            Rect(0, size.y-screenHeight, 0, 0),
-            paint
-    )
-
-    val widthRatio = screenWidth.toFloat() / bitmap.width
-    val heightRatio = screenHeight.toFloat() / bitmap.height
-
-    // Draw key points over the image.
-
-    for (keyPoint in person.keyPoints) {
-      if (keyPoint.score > minConfidence) {
-        val position = keyPoint.position
-        val adjustedX: Float = screenWidth-(position.x.toFloat() * widthRatio + left)
-        val adjustedY: Float = position.y.toFloat() * heightRatio +top
-        canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
-      }
-
-    }
-
-    for (line in bodyJoints) {
-      if (
               (person.keyPoints[line.first.ordinal].score > minConfidence) and
               (person.keyPoints[line.second.ordinal].score > minConfidence)
       ) {
         canvas.drawLine(
-                screenWidth-(person.keyPoints[line.first.ordinal].position.x.toFloat() * widthRatio + left),
-                person.keyPoints[line.first.ordinal].position.y.toFloat() * heightRatio+top,
-                screenWidth-(person.keyPoints[line.second.ordinal].position.x.toFloat() * widthRatio + left),
-                person.keyPoints[line.second.ordinal].position.y.toFloat() * heightRatio+top,
+                screenWidth - (person.keyPoints[line.first.ordinal].position.x.toFloat() * widthRatio + left),
+                person.keyPoints[line.first.ordinal].position.y.toFloat() * heightRatio + top/2,
+                screenWidth - (person.keyPoints[line.second.ordinal].position.x.toFloat() * widthRatio + left),
+                person.keyPoints[line.second.ordinal].position.y.toFloat() * heightRatio + top/2,
                 paint
         )
 
       }
     }
 
-
+    for (line in bodypoint) {
+      if (
+              (person.keyPoints[line.first.ordinal].score > minConfidence) and
+              (person.keyPoints[line.second.ordinal].score > minConfidence) and
+              (person.keyPoints[line.third.ordinal].score > minConfidence)
+      ) {
+        getAngle(person.keyPoints[line.first.ordinal].position,
+                person.keyPoints[line.second.ordinal].position,
+                person.keyPoints[line.third.ordinal].position)
+      }
+    }
 
     // Draw!
-    surfaceHolder2!!.unlockCanvasAndPost(canvas)
+    surfaceHolder!!.unlockCanvasAndPost(canvas)
   }
+
   /** Process image using Posenet library.   */
   private fun processImage(bitmap: Bitmap) {
     // Crop bitmap.
-    val croppedBitmap = cropBitmap(bitmap)
+    //val croppedBitmap = cropBitmap(bitmap)
 
     // Created scaled version of bitmap for model input.
-    val scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true)
+    val scaledBitmap = Bitmap.createScaledBitmap(bitmap, MODEL_WIDTH, MODEL_HEIGHT, true)
 
     // Perform inference.
     val person = posenet.estimateSinglePose(scaledBitmap)
@@ -750,7 +641,7 @@ class PosenetActivity :
     try {
       // We capture images from preview in YUV format.
       imageReader = ImageReader.newInstance(
-        previewSize!!.width, previewSize!!.height, ImageFormat.YUV_420_888, 2
+              previewSize!!.width, previewSize!!.height, ImageFormat.YUV_420_888, 2
       )
       imageReader!!.setOnImageAvailableListener(imageAvailableListener, backgroundHandler)
 
@@ -759,45 +650,45 @@ class PosenetActivity :
 
       // We set up a CaptureRequest.Builder with the output Surface.
       previewRequestBuilder = cameraDevice!!.createCaptureRequest(
-        CameraDevice.TEMPLATE_PREVIEW
+              CameraDevice.TEMPLATE_PREVIEW
       )
       previewRequestBuilder!!.addTarget(recordingSurface)
 
       // Here, we create a CameraCaptureSession for camera preview.
       cameraDevice!!.createCaptureSession(
-        listOf(recordingSurface),
-        object : CameraCaptureSession.StateCallback() {
-          override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
-            // The camera is already closed
-            if (cameraDevice == null) return
+              listOf(recordingSurface),
+              object : CameraCaptureSession.StateCallback() {
+                override fun onConfigured(cameraCaptureSession: CameraCaptureSession) {
+                  // The camera is already closed
+                  if (cameraDevice == null) return
 
-            // When the session is ready, we start displaying the preview.
-            captureSession = cameraCaptureSession
-            try {
-              // Auto focus should be continuous for camera preview.
-              previewRequestBuilder!!.set(
-                CaptureRequest.CONTROL_AF_MODE,
-                CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
-              )
-              // Flash is automatically enabled when necessary.
-              setAutoFlash(previewRequestBuilder!!)
+                  // When the session is ready, we start displaying the preview.
+                  captureSession = cameraCaptureSession
+                  try {
+                    // Auto focus should be continuous for camera preview.
+                    previewRequestBuilder!!.set(
+                            CaptureRequest.CONTROL_AF_MODE,
+                            CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
+                    )
+                    // Flash is automatically enabled when necessary.
+                    setAutoFlash(previewRequestBuilder!!)
 
-              // Finally, we start displaying the camera preview.
-              previewRequest = previewRequestBuilder!!.build()
-              captureSession!!.setRepeatingRequest(
-                previewRequest!!,
-                captureCallback, backgroundHandler
-              )
-            } catch (e: CameraAccessException) {
-              Log.e(TAG, e.toString())
-            }
-          }
+                    // Finally, we start displaying the camera preview.
+                    previewRequest = previewRequestBuilder!!.build()
+                    captureSession!!.setRepeatingRequest(
+                            previewRequest!!,
+                            captureCallback, backgroundHandler
+                    )
+                  } catch (e: CameraAccessException) {
+                    Log.e(TAG, e.toString())
+                  }
+                }
 
-          override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
-            showToast("Failed")
-          }
-        },
-        null
+                override fun onConfigureFailed(cameraCaptureSession: CameraCaptureSession) {
+                  showToast("Failed")
+                }
+              },
+              null
       )
     } catch (e: CameraAccessException) {
       Log.e(TAG, e.toString())
@@ -807,8 +698,8 @@ class PosenetActivity :
   private fun setAutoFlash(requestBuilder: CaptureRequest.Builder) {
     if (flashSupported) {
       requestBuilder.set(
-        CaptureRequest.CONTROL_AE_MODE,
-        CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
+              CaptureRequest.CONTROL_AE_MODE,
+              CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
       )
     }
   }
@@ -819,10 +710,10 @@ class PosenetActivity :
   class ErrorDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-      AlertDialog.Builder(activity)
-        .setMessage(arguments!!.getString(ARG_MESSAGE))
-        .setPositiveButton(android.R.string.ok) { _, _ -> activity!!.finish() }
-        .create()
+            AlertDialog.Builder(activity)
+                    .setMessage(arguments!!.getString(ARG_MESSAGE))
+                    .setPositiveButton(android.R.string.ok) { _, _ -> activity!!.finish() }
+                    .create()
 
     companion object {
 
@@ -858,56 +749,58 @@ class PosenetActivity :
   }
 
 
-  fun run(url :String){
+  fun run(url: String) {
     val request = Request.Builder().url(url).build()
 
 
     client.newCall(request).enqueue(object : Callback {
       override fun onFailure(call: Call, e: IOException) {
-        Log.e("result",e.toString())
+        Log.e("result", e.toString())
       }
 
       override fun onResponse(call: Call, response: Response) {
         var str_reponse = response.body()!!.string()
 
-        val json_contact:JSONObject = JSONObject(str_reponse)
-        var jsonarray_info:JSONArray=json_contact.getJSONArray("res_data")
-        var i:Int = 0
+        val json_contact: JSONObject = JSONObject(str_reponse)
+        var jsonarray_info: JSONArray = json_contact.getJSONArray("res_data")
+        var i: Int = 0
         var size: Int = jsonarray_info.length()
 
-        for (i in 0..size-1){
-          var json_ob:JSONObject=jsonarray_info.getJSONObject(i)
-          var path:String = json_ob.get("path") as String
+        for (i in 0..size - 1) {
+          var json_ob: JSONObject = jsonarray_info.getJSONObject(i)
+          var path: String = json_ob.get("path") as String
+          var relbow: Double = json_ob.get("imageAngleRIGHT_ELBOW") as Double
+          var lelbow: Double = json_ob.get("imageAngleLEFT_ELBOW") as Double
+          var rknee: Double = json_ob.get("imageAngleRIGHT_KNEE") as Double
+          var lknee: Double = json_ob.get("imageAngleLEFT_KNEE") as Double
           pathlist.add(path)
-          Log.e("json", path.toString())
+          rightelbowlist.add(relbow)
+          leftelbowlist.add(lelbow)
+          rightknee.add(rknee)
+          leftknee.add(lknee)
+          Log.e("json", json_ob.toString())
+          break
         }
 
-        setImage(pathlist.get(0))
+        setImage(pathlist.get(yoganum))
       }
     })
   }
 
-  fun setImage(url: String){
-    
-    Glide.with(this).asBitmap().load(url).into(object : CustomTarget<Bitmap>() {
+  fun setImage(url: String) {
+
+    Glide.with(this).asBitmap().load(url).into(object : CustomTarget<Bitmap>(){
       override fun onLoadCleared(placeholder: Drawable?) {
 
       }
 
       override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-
-        val croppedBitmap = imagecropBitmap(resource)
-
-        // Created scaled version of bitmap for model input.
-        val scaledBitmap = Bitmap.createScaledBitmap(croppedBitmap, MODEL_WIDTH, MODEL_HEIGHT, true)
-
-        val person = posenet.estimateSinglePose(scaledBitmap)
-        val canvas: Canvas = surfaceHolder2!!.lockCanvas()
-        draw(canvas, person, scaledBitmap)
-
+        imageview.setImageBitmap(resource)
       }
     })
   }
+
+
 
   fun compressbitmap(bitmap: Bitmap): Bitmap {
     var stream : ByteArrayOutputStream = ByteArrayOutputStream()
@@ -926,6 +819,7 @@ class PosenetActivity :
     val radians = Math.abs(Math.atan2(dy1, dx1) - Math.atan2(dy2, dx2))
     val angle : Double = Math.toDegrees(radians)
 
+    Log.e("angle : ",angle.toString())
 
     return angle
   }

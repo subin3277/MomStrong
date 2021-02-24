@@ -101,6 +101,24 @@ class Posenet(
     return interpreter!!
   }
 
+  private fun getInterpreterimage(): Interpreter {
+    if (interpreter != null) {
+      return interpreter!!
+    }
+    val options = Interpreter.Options()
+    options.setNumThreads(NUM_LITE_THREADS)
+    when (device) {
+      Device.CPU -> { }
+      Device.GPU -> {
+        gpuDelegate = GpuDelegate()
+        options.addDelegate(gpuDelegate)
+      }
+      Device.NNAPI -> options.setUseNNAPI(true)
+    }
+    interpreter = Interpreter(loadModelFile(filename, context), options)
+    return interpreter!!
+  }
+
   override fun close() {
     interpreter?.close()
     interpreter = null
@@ -279,4 +297,5 @@ class Posenet(
 
     return person
   }
+
 }

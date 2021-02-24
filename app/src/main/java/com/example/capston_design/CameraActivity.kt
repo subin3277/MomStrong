@@ -16,10 +16,19 @@
 
 package com.example.capston_design;
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 
 class CameraActivity : AppCompatActivity() {
+
+  private var drawerLayout: DrawerLayout? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -27,5 +36,50 @@ class CameraActivity : AppCompatActivity() {
     savedInstanceState ?: supportFragmentManager.beginTransaction()
             .replace(R.id.container, PosenetActivity())
             .commit()
+
+    val toolbar = findViewById<View>(R.id.camera_toolbar) as Toolbar
+    setSupportActionBar(toolbar)
+    val actionBar = supportActionBar
+    actionBar!!.setDisplayShowTitleEnabled(false)
+    actionBar!!.setDisplayHomeAsUpEnabled(true)
+    actionBar!!.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24)
+
+    drawerLayout = findViewById<View>(R.id.camera_drawer_layout) as DrawerLayout
+
+    val navigationView = findViewById<View>(R.id.camera_nav_view) as NavigationView
+    navigationView.setNavigationItemSelectedListener { item ->
+      item.isChecked = true
+      drawerLayout!!.closeDrawers()
+      val id = item.itemId
+      val title = item.title.toString()
+      if (id == R.id.tab_info) {
+        val intent = Intent(this@CameraActivity, InformationActivity::class.java)
+        startActivity(intent)
+        finish()
+      } else if (id == R.id.tab_eat) {
+        val intent = Intent(this@CameraActivity, DietActivity::class.java)
+        startActivity(intent)
+        finish()
+      } else if (id == R.id.tab_yoga) {
+        val intent = Intent(this@CameraActivity, YogaActivity::class.java)
+        startActivity(intent)
+        finish()
+      } else if (id == R.id.tab_hos) {
+        val intent = Intent(this@CameraActivity, HospitalActivity::class.java)
+        startActivity(intent)
+        finish()
+      }
+      true
+    }
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    when (item.itemId) {
+      android.R.id.home -> {
+        drawerLayout!!.openDrawer(GravityCompat.START)
+        return true
+      }
+    }
+    return super.onOptionsItemSelected(item)
   }
 }
