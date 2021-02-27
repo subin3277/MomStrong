@@ -49,8 +49,8 @@ enum class BodyPart {
 }
 
 class Position {
-  var x: Int = 0
-  var y: Int = 0
+  var x: Float = 0.0F
+  var y: Float = 0.0F
 }
 
 class KeyPoint {
@@ -261,8 +261,8 @@ class Posenet(
     }
 
     // Calculating the x and y coordinates of the keypoints with offset adjustment.
-    val xCoords = IntArray(numKeypoints)
-    val yCoords = IntArray(numKeypoints)
+    val xCoords = FloatArray(numKeypoints)
+    val yCoords = FloatArray(numKeypoints)
     val confidenceScores = FloatArray(numKeypoints)
     keypointPositions.forEachIndexed { idx, position ->
       val positionY = keypointPositions[idx].first
@@ -270,12 +270,12 @@ class Posenet(
       yCoords[idx] = (
         position.first / (height - 1).toFloat() * bitmap.height +
           offsets[0][positionY][positionX][idx]
-        ).toInt()
+        )
       xCoords[idx] = (
         position.second / (width - 1).toFloat() * bitmap.width +
           offsets[0][positionY]
           [positionX][idx + numKeypoints]
-        ).toInt()
+        )
       confidenceScores[idx] = sigmoid(heatmaps[0][positionY][positionX][idx])
     }
 

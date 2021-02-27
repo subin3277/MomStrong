@@ -57,6 +57,7 @@ import java.net.URL
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+import kotlin.math.round
 
 class PosenetActivity :
   Fragment(),
@@ -159,7 +160,6 @@ class PosenetActivity :
 
   /** Abstract interface to someone holding a display surface.    */
   private var surfaceHolder: SurfaceHolder? = null
-  private var surfaceHolder2: SurfaceHolder? = null
 
   private var client = OkHttpClient()
   var pathlist: ArrayList<String> = ArrayList()
@@ -170,6 +170,15 @@ class PosenetActivity :
   private var IMAGEWEIGHT = 257
   private var IMAGEHEIGHT = 125
   private var yoganum = 0
+  var videoAngleRIGHT_ELBOW = 0.0F
+  var videoAngleLEFT_ELBOW = 0.0F
+  var videoAngleRIGHT_KNEE = 0.0F
+  var videoAngleLEFT_KNEE = 0.0F
+
+  var errorRateRIGHT_ELBOW = 100.0F
+  var errorRateLEFT_ELBOW = 100.0F
+  var errorRateRIGHT_KNEE = 100.0F
+  var errorRateLEFT_KNEE = 100.0F
 
 
   /** [CameraDevice.StateCallback] is called when [CameraDevice] changes its state.   */
@@ -562,32 +571,24 @@ class PosenetActivity :
 
     // Draw key points over the image.
     var i = 0
+    var videochecks : MutableList<Boolean> = mutableListOf(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false)
+    val videoPositions = Array(17) { Position() }
+
     for (i in 0..person.keyPoints.size - 1) {
       if (person.keyPoints[i].score > minConfidence) {
         //imageKeyPoints[i].bodyPart = person.keyPoints[i].bodyPart
         //imageKeyPoints[i].position = person.keyPoints[i].position
+        videochecks[i]=true
         val position = person.keyPoints[i].position
-        val adjustedX: Float = screenWidth - (position.x.toFloat() * widthRatio + left)
-        val adjustedY: Float = position.y.toFloat() * heightRatio + top/2
+        val adjustedX: Float = screenWidth - (position.x * widthRatio + left)
+        val adjustedY: Float = position.y * heightRatio + top/2
+        videoPositions[i].x = adjustedX
+        videoPositions[i].y = adjustedY
         canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
       }
 
     }
 
-    /*for (keyPoint in person.keyPoints) {
-      if (keyPoint.score > minConfidence) {
-        val position = keyPoint.position
-        val adjustedX: Float = screenWidth-(position.x.toFloat() * widthRatio + left)
-        val adjustedY: Float = position.y.toFloat() * heightRatio +top
-        canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
-
-        Log.e("(x,y):",adjustedX.toString()+","+adjustedY.toString())
-
-      }
-      i++
-      Log.e("keypoint",i.toString()+","+keyPoint.bodyPart)
-    }
-*/
     for (line in bodyJoints) {
       if (
               (person.keyPoints[line.first.ordinal].score > minConfidence) and
@@ -603,6 +604,7 @@ class PosenetActivity :
 
       }
     }
+/*
 
     for (line in bodypoint) {
       if (
@@ -615,7 +617,41 @@ class PosenetActivity :
                 person.keyPoints[line.third.ordinal].position)
       }
     }
+*/
 
+    videoAngleRIGHT_ELBOW = 0.0F
+    videoAngleLEFT_ELBOW = 0.0F
+    videoAngleRIGHT_KNEE = 0.0F
+    videoAngleLEFT_KNEE = 0.0F
+
+    errorRateRIGHT_ELBOW = 100.0F
+    errorRateLEFT_ELBOW = 100.0F
+    errorRateRIGHT_KNEE = 100.0F
+    errorRateLEFT_KNEE = 100.0F
+
+    if (videochecks[6] and videochecks[8] and videochecks[10]){
+      videoAngleRIGHT_ELBOW = getAngle(videoPositions[6], videoPositions[8], videoPositions[10])
+      errorRateRIGHT_ELBOW = (round((abs(rightelbowlist[yoganum] - videoAngleRIGHT_ELBOW)) / rightelbowlist[yoganum] * 100) * 10 / 10).toFloat()
+    }
+    if (videochecks[5] and videochecks[7] and videochecks[9]){
+      videoAngleLEFT_ELBOW = getAngle(videoPositions[5], videoPositions[7], videoPositions[9])
+      errorRateLEFT_ELBOW = (round((abs(leftelbowlist[yoganum] - videoAngleLEFT_ELBOW)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
+    }
+    if (videochecks[12] and videochecks[14] and videochecks[16]){
+      videoAngleRIGHT_KNEE = getAngle(videoPositions[12], videoPositions[14], videoPositions[16])
+      errorRateRIGHT_KNEE = (round((abs(leftelbowlist[yoganum] - videoAngleRIGHT_KNEE)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
+    }
+    if (videochecks[11] and videochecks[13] and videochecks[15]){
+      videoAngleLEFT_KNEE = getAngle(videoPositions[11], videoPositions[13], videoPositions[15])
+      errorRateLEFT_KNEE= (round((abs(leftelbowlist[yoganum] - videoAngleLEFT_KNEE)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
+    }
+
+    if ((errorRateRIGHT_ELBOW < 20) or (errorRateLEFT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20) or (errorRateLEFT_KNEE < 20)){
+      Log.e("다음", "넘어가세요")
+
+      nextimage()
+
+    }
     // Draw!
     surfaceHolder!!.unlockCanvasAndPost(canvas)
   }
@@ -779,10 +815,10 @@ class PosenetActivity :
           rightknee.add(rknee)
           leftknee.add(lknee)
           Log.e("json", json_ob.toString())
-          break
         }
 
         setImage(pathlist.get(yoganum))
+
       }
     })
   }
@@ -801,27 +837,41 @@ class PosenetActivity :
   }
 
 
-
-  fun compressbitmap(bitmap: Bitmap): Bitmap {
-    var stream : ByteArrayOutputStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG,40,stream)
-    var byteArray = stream.toByteArray()
-    var compressbitmap: Bitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.size)
-    return compressbitmap
-  }
-
-  fun getAngle(a: Position, b: Position, c: Position): Double {
+  fun getAngle(a: Position, b: Position, c: Position): Float {
     val dx1: Double = (c.x - b.x).toDouble() // x 변화량, b -> c
     val dx2: Double = (a.x - b.x).toDouble() // x 변화량, b -> a
     val dy1: Double = (c.y - b.y).toDouble() // y 변화량, b -> c
     val dy2: Double = (a.y - b.y).toDouble() // y 변화량, b -> a
 
     val radians = Math.abs(Math.atan2(dy1, dx1) - Math.atan2(dy2, dx2))
-    val angle : Double = Math.toDegrees(radians)
+    val angle : Float = Math.toDegrees(radians).toFloat()
 
     Log.e("angle : ",angle.toString())
 
     return angle
+  }
+
+  fun nextimage(){
+    Toast.makeText(context,"자세를 유지하세요",Toast.LENGTH_SHORT).show()
+    Toast.makeText(context,"다음 자세로 넘어갑니다.",Toast.LENGTH_SHORT).show()
+
+    videoAngleRIGHT_ELBOW = 0.0F
+    videoAngleLEFT_ELBOW = 0.0F
+    videoAngleRIGHT_KNEE = 0.0F
+    videoAngleLEFT_KNEE = 0.0F
+
+    errorRateRIGHT_ELBOW = 100.0F
+    errorRateLEFT_ELBOW = 100.0F
+    errorRateRIGHT_KNEE = 100.0F
+    errorRateLEFT_KNEE = 100.0F
+
+
+    Handler().postDelayed({
+
+      //yoganum +=1
+      setImage(pathlist.get(1))
+
+    },4000)
   }
 
 }
