@@ -24,14 +24,13 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Context context =this;
 
-    LinearLayout info,diet,yoga,hosp;
+    LinearLayout diet,yoga,hosp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        info= findViewById(R.id.main_menu_info);
         diet=findViewById(R.id.main_menu_diet);
         yoga=findViewById(R.id.main_menu_yoga);
         hosp=findViewById(R.id.main_menu_hos);
@@ -81,19 +80,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, InformationActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
         diet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DietActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.in_left,R.anim.out_right);
                 finish();
             }
         });
@@ -102,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, YogaActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.in_left,R.anim.out_right);
                 finish();
             }
         });
@@ -110,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, HospitalActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.in_left,R.anim.out_right);
                 finish();
             }
         });

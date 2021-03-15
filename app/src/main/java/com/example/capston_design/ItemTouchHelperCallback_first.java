@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -154,10 +155,20 @@ public class ItemTouchHelperCallback_first extends ItemTouchHelper.Callback{
                 if(listener != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())){
                     if(buttonsShowedState == ButtonsState_first.LEFT_VISIBLE){
                         listener.onLeftClick(viewHolder.getAdapterPosition(), viewHolder);
-                        new DietActivity.GetSide1().execute();
+                        //new DietActivity.GetSide1().execute();
+                        DietActivity.dietAdapter_first.addItem(DietActivity.side1list.get(DietActivity.side1index));
+                        DietActivity.recyclerViewfirst.setAdapter(DietActivity.dietAdapter_first);
+                        DietActivity.firstname=DietActivity.firstitem.getName();
+                        DietActivity.firstlist.add(DietActivity.firstname);
+                        DietActivity.side1index +=1 ;
                     }else if(buttonsShowedState == ButtonsState_first.RIGHT_VISIBLE){
                         listener.onRightClick(viewHolder.getAdapterPosition(), viewHolder);
-                        new DietActivity.GetSide1().execute();
+                        //new DietActivity.GetSide1().execute();
+                        DietActivity.dietAdapter_first.addItem(DietActivity.side1list.get(DietActivity.side1index));
+                        DietActivity.recyclerViewfirst.setAdapter(DietActivity.dietAdapter_first);
+                        DietActivity.firstname=DietActivity.firstitem.getName();
+                        DietActivity.firstlist.add(DietActivity.firstname);
+                        DietActivity.side1index +=1 ;
                     }
                 } buttonsShowedState = ButtonsState_first.GONE; currenrtItemViewHolder = null;
                 return false;

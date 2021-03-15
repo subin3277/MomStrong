@@ -21,7 +21,7 @@ public class YogaActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Context context = this;
 
-    TextView firstbtn;
+    TextView firstbtn,secondbtn,thirdbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,7 @@ public class YogaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_yoga);
 
         firstbtn=findViewById(R.id.yoga_btn_1st);
+        thirdbtn=findViewById(R.id.yoga_btn_3rd);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.yoga_toolbar);
         setSupportActionBar(toolbar);
@@ -70,6 +71,13 @@ public class YogaActivity extends AppCompatActivity {
         });
 
         firstbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(YogaActivity.this,Yoga1stActivity.class);
+                startActivity(intent);
+            }
+        });
+        thirdbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(YogaActivity.this,Yoga1stActivity.class);

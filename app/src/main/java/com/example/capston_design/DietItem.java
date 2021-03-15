@@ -1,12 +1,16 @@
 package com.example.capston_design;
 
+import android.content.Intent;
+
 public class DietItem {
     String name;
     String nutirition;
+    int idx;
 
-    public DietItem(String name,String nutirition){
+    public DietItem(String name,String nutirition,int idx){
         this.name=name;
         this.nutirition=nutirition;
+        this.idx = idx;
     }
 
     public String getName() {
@@ -23,5 +27,13 @@ public class DietItem {
 
     public void setNutirition(String nutirition) {
         this.nutirition = nutirition;
+    }
+
+    public int getIdx() {
+        return idx;
+    }
+
+    public void setIdx(int idx) {
+        this.idx = idx;
     }
 }

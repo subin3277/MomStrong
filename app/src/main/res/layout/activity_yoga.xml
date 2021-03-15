@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="#FFD9EC">
+            android:background="@color/mainpink">
 
             <TextView
                 android:id="@+id/yoga_title"
@@ -38,35 +38,95 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <TextView
-            android:id="@+id/yoga_btn_1st"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="초기 임산부를 위한 요가\n (0주차 ~ 11주차)"
-            android:textColor="@color/black"
-            android:textSize="30dp"
+            android:orientation="horizontal"
             android:layout_marginTop="20dp"
-            android:gravity="center"/>
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:background="@color/subpink"
+            android:weightSum="10">
 
-        <TextView
-            android:id="@+id/yoga_btn_2nd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="중기 임산부를 위한 요가\n (12주차 ~ 27주차)"
-            android:textColor="@color/black"
-            android:textSize="30dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"/>
+            <TextView
+                android:id="@+id/yoga_btn_1st"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="초기 임산부를 위한 요가\n (0주차 ~ 11주차)"
+                android:textColor="@color/black"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_weight="9"
+                />
 
-        <TextView
-            android:id="@+id/yoga_btn_3rd"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_baseline_navigate_next_24"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="말기 임산부를 위한 요가\n (27주차 ~ 출산)"
-            android:textColor="@color/black"
-            android:textSize="30dp"
+            android:orientation="horizontal"
             android:layout_marginTop="20dp"
-            android:gravity="center"/>
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:background="@color/subpink"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/yoga_btn_2nd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="중기 임산부를 위한 요가\n (12주차 ~ 27주차)"
+                android:textColor="@color/black"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_weight="9"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_baseline_navigate_next_24"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:background="@color/subpink"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/yoga_btn_3rd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="말기 임산부를 위한 요가\n (27주차 ~ 출산)"
+                android:textColor="@color/black"
+                android:textSize="30dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_weight="9"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_baseline_navigate_next_24"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
 
 
     </LinearLayout>

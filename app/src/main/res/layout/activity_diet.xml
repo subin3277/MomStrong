@@ -19,7 +19,7 @@
             android:id="@+id/diet_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFD9EC">
+            android:background="@color/mainpink">
 
             <TextView
                 android:id="@+id/diet_title"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="식단"
                 android:textSize="30sp"
-                android:textColor="#000000"
+                android:textColor="@color/maintext"
                 android:paddingTop="20dp"
                 android:layout_gravity="center"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
@@ -62,9 +62,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="밥"
-                android:textColor="@color/black"
+                android:textColor="@color/maintext"
                 android:textSize="20sp"
-                android:background="@color/pink"
+                android:background="@color/mainpink"
                 android:paddingLeft="10dp"
                 android:padding="5dp"/>
 
@@ -86,9 +86,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="국"
-                android:textColor="@color/black"
+                android:textColor="@color/maintext"
                 android:textSize="20sp"
-                android:background="@color/pink"
+                android:background="@color/mainpink"
                 android:paddingLeft="10dp"
                 android:padding="5dp"
                 android:visibility="gone"/>
@@ -113,9 +113,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="첫번째 반찬"
-                android:textColor="@color/black"
+                android:textColor="@color/maintext"
                 android:textSize="20sp"
-                android:background="@color/pink"
+                android:background="@color/mainpink"
                 android:paddingLeft="10dp"
                 android:padding="5dp"
                 android:visibility="gone"/>
@@ -140,9 +140,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="두번째 반찬"
-                android:textColor="@color/black"
+                android:textColor="@color/maintext"
                 android:textSize="20sp"
-                android:background="@color/pink"
+                android:background="@color/mainpink"
                 android:paddingLeft="10dp"
                 android:padding="5dp"
                 android:visibility="gone"/>

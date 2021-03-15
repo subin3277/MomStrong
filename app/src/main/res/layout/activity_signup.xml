@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFD9EC"
+    android:background="@color/mainpink"
     tools:context=".SignupActivity">
 
     <TextView
@@ -114,8 +114,9 @@
         android:layout_height="wrap_content"
         android:text="다음"
         android:textSize="20sp"
+        android:background="@drawable/button_round"
         app:layout_constraintTop_toBottomOf="@id/signup_et_password2"
         app:layout_constraintRight_toRightOf="@id/guideline2"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

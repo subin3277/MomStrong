@@ -180,6 +180,8 @@ class PosenetActivity :
   var errorRateRIGHT_KNEE = 100.0F
   var errorRateLEFT_KNEE = 100.0F
 
+  var imagestate = true
+  var imagecorrect = 0
 
   /** [CameraDevice.StateCallback] is called when [CameraDevice] changes its state.   */
   private val stateCallback = object : CameraDevice.StateCallback() {
@@ -250,6 +252,7 @@ class PosenetActivity :
 
     run("http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st")
     surfaceHolder = surfaceView!!.holder
+
   }
 
   override fun onResume() {
@@ -571,17 +574,17 @@ class PosenetActivity :
 
     // Draw key points over the image.
     var i = 0
-    var videochecks : MutableList<Boolean> = mutableListOf(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false)
+    var videochecks: MutableList<Boolean> = mutableListOf(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false)
     val videoPositions = Array(17) { Position() }
 
     for (i in 0..person.keyPoints.size - 1) {
       if (person.keyPoints[i].score > minConfidence) {
         //imageKeyPoints[i].bodyPart = person.keyPoints[i].bodyPart
         //imageKeyPoints[i].position = person.keyPoints[i].position
-        videochecks[i]=true
+        videochecks[i] = true
         val position = person.keyPoints[i].position
         val adjustedX: Float = screenWidth - (position.x * widthRatio + left)
-        val adjustedY: Float = position.y * heightRatio + top/2
+        val adjustedY: Float = position.y * heightRatio + top / 2
         videoPositions[i].x = adjustedX
         videoPositions[i].y = adjustedY
         canvas.drawCircle(adjustedX, adjustedY, circleRadius, paint)
@@ -596,9 +599,9 @@ class PosenetActivity :
       ) {
         canvas.drawLine(
                 screenWidth - (person.keyPoints[line.first.ordinal].position.x.toFloat() * widthRatio + left),
-                person.keyPoints[line.first.ordinal].position.y.toFloat() * heightRatio + top/2,
+                person.keyPoints[line.first.ordinal].position.y.toFloat() * heightRatio + top / 2,
                 screenWidth - (person.keyPoints[line.second.ordinal].position.x.toFloat() * widthRatio + left),
-                person.keyPoints[line.second.ordinal].position.y.toFloat() * heightRatio + top/2,
+                person.keyPoints[line.second.ordinal].position.y.toFloat() * heightRatio + top / 2,
                 paint
         )
 
@@ -629,29 +632,44 @@ class PosenetActivity :
     errorRateRIGHT_KNEE = 100.0F
     errorRateLEFT_KNEE = 100.0F
 
-    if (videochecks[6] and videochecks[8] and videochecks[10]){
+    if (videochecks[6] and videochecks[8] and videochecks[10]) {
       videoAngleRIGHT_ELBOW = getAngle(videoPositions[6], videoPositions[8], videoPositions[10])
       errorRateRIGHT_ELBOW = (round((abs(rightelbowlist[yoganum] - videoAngleRIGHT_ELBOW)) / rightelbowlist[yoganum] * 100) * 10 / 10).toFloat()
     }
-    if (videochecks[5] and videochecks[7] and videochecks[9]){
+    if (videochecks[5] and videochecks[7] and videochecks[9]) {
       videoAngleLEFT_ELBOW = getAngle(videoPositions[5], videoPositions[7], videoPositions[9])
       errorRateLEFT_ELBOW = (round((abs(leftelbowlist[yoganum] - videoAngleLEFT_ELBOW)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
     }
-    if (videochecks[12] and videochecks[14] and videochecks[16]){
+    if (videochecks[12] and videochecks[14] and videochecks[16]) {
       videoAngleRIGHT_KNEE = getAngle(videoPositions[12], videoPositions[14], videoPositions[16])
       errorRateRIGHT_KNEE = (round((abs(leftelbowlist[yoganum] - videoAngleRIGHT_KNEE)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
     }
-    if (videochecks[11] and videochecks[13] and videochecks[15]){
+    if (videochecks[11] and videochecks[13] and videochecks[15]) {
       videoAngleLEFT_KNEE = getAngle(videoPositions[11], videoPositions[13], videoPositions[15])
-      errorRateLEFT_KNEE= (round((abs(leftelbowlist[yoganum] - videoAngleLEFT_KNEE)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
+      errorRateLEFT_KNEE = (round((abs(leftelbowlist[yoganum] - videoAngleLEFT_KNEE)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
     }
 
-    if ((errorRateRIGHT_ELBOW < 20) or (errorRateLEFT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20) or (errorRateLEFT_KNEE < 20)){
+    if (((errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20)) or
+            ((errorRateRIGHT_ELBOW < 20) or (errorRateLEFT_ELBOW < 20) or (errorRateLEFT_KNEE < 20)) or
+            ((errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20) or (errorRateLEFT_KNEE < 20)) or
+            ((errorRateLEFT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20) or (errorRateLEFT_KNEE < 20))
+    ) {
       Log.e("다음", "넘어가세요")
+      if (imagecorrect <= 3) {
+        Toast.makeText(context, "자세를 유지하세요", Toast.LENGTH_SHORT).show()
+      }
+      imagecorrect += 1
+    }
+
+    if (imagecorrect >= 50 ) {
+      imagecorrect=0
 
       nextimage()
-
     }
+
+    Log.e("imagecorrect : ", imagecorrect.toString())
+
+
     // Draw!
     surfaceHolder!!.unlockCanvasAndPost(canvas)
   }
@@ -832,6 +850,7 @@ class PosenetActivity :
 
       override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
         imageview.setImageBitmap(resource)
+        imagestate = true
       }
     })
   }
@@ -852,8 +871,7 @@ class PosenetActivity :
   }
 
   fun nextimage(){
-    Toast.makeText(context,"자세를 유지하세요",Toast.LENGTH_SHORT).show()
-    Toast.makeText(context,"다음 자세로 넘어갑니다.",Toast.LENGTH_SHORT).show()
+    Toast.makeText(context,"다음 자세로 넘어갑니다.",Toast.LENGTH_LONG).show()
 
     videoAngleRIGHT_ELBOW = 0.0F
     videoAngleLEFT_ELBOW = 0.0F
@@ -865,13 +883,9 @@ class PosenetActivity :
     errorRateRIGHT_KNEE = 100.0F
     errorRateLEFT_KNEE = 100.0F
 
+    yoganum += 1
+    setImage(pathlist.get(yoganum))
 
-    Handler().postDelayed({
-
-      //yoganum +=1
-      setImage(pathlist.get(1))
-
-    },4000)
   }
 
 }

@@ -63,8 +63,9 @@ public class LoginActivity extends AppCompatActivity {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, CameraActivity.class);
+                Intent intent = new Intent(LoginActivity.this, Signup3Activity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.in_left,R.anim.out_right);
                 finish();
             }
         });
@@ -75,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this,SignupActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.in_left,R.anim.out_right);
                 finish();
             }
         });
@@ -84,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.in_left,R.anim.out_right);
                 finish();
             }
         });
@@ -191,6 +194,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
+                            overridePendingTransition(R.anim.in_left,R.anim.out_right);
                             finish();
                     }
 

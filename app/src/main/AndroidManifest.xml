@@ -21,6 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Signup3Activity"></activity>
         <activity android:name=".YogacamActivity" />
 
         <receiver android:name=".Alarm_Receiver" />

@@ -20,7 +20,7 @@
             android:id="@+id/hosp_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFD9EC"
+            android:background="@color/mainpink"
             >
 
             <TextView
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="병원 정보"
                 android:textSize="30sp"
-                android:textColor="#000000"
+                android:textColor="@color/maintext"
                 android:paddingTop="20dp"
                 android:layout_gravity="center"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
@@ -42,11 +42,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/hosp_title"
-            android:background="#FFEBFE"
+            android:background="@color/subpink"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
-            app:mcv_selectionColor="#b2ebf2"
+            app:mcv_selectionColor="@color/mainpink"
             app:mcv_showOtherDates="all"
             />
 
@@ -80,6 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/subpink"
                 android:text="병원 일정 추가하기" />
 
             <Button
@@ -87,6 +88,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/subpink"
                 android:text="인근 병원 찾기" />
 
         </LinearLayout>

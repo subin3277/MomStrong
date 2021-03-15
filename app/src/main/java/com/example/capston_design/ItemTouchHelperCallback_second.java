@@ -154,10 +154,18 @@ public class ItemTouchHelperCallback_second extends ItemTouchHelper.Callback{
                 if(listener != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())){
                     if(buttonsShowedState == ButtonsState_second.LEFT_VISIBLE){
                         listener.onLeftClick(viewHolder.getAdapterPosition(), viewHolder);
-                        new DietActivity.GetSide2().execute();
+                        DietActivity.dietAdapter_second.addItem(DietActivity.side2list.get(DietActivity.side2index));
+                        DietActivity.recyclerViewsecond.setAdapter(DietActivity.dietAdapter_second);
+                        DietActivity.secondname=DietActivity.seconditem.getName();
+                        DietActivity.secondlist.add(DietActivity.secondname);
+                        DietActivity.side2index +=1 ;
                     }else if(buttonsShowedState == ButtonsState_second.RIGHT_VISIBLE){
                         listener.onRightClick(viewHolder.getAdapterPosition(), viewHolder);
-                        new DietActivity.GetSide2().execute();
+                        DietActivity.dietAdapter_second.addItem(DietActivity.side2list.get(DietActivity.side2index));
+                        DietActivity.recyclerViewsecond.setAdapter(DietActivity.dietAdapter_second);
+                        DietActivity.secondname=DietActivity.seconditem.getName();
+                        DietActivity.secondlist.add(DietActivity.secondname);
+                        DietActivity.side2index +=1 ;
                     }
                 } buttonsShowedState = ButtonsState_second.GONE; currenrtItemViewHolder = null;
                 return false;

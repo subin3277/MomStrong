@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="10"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/getdietlist_button"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:text="음식이름"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:layout_weight="10"
+        android:background="@drawable/button_border"
+        android:textColor="@color/maintext"
+        android:layout_margin="10dp"
+        />
+    <TextView
+        android:id="@+id/getdietlist_state"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="0"
+        />
+    <TextView
+        android:id="@+id/getdietlist_idx"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+
+</LinearLayout>

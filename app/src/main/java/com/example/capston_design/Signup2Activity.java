@@ -246,9 +246,10 @@ public class Signup2Activity extends AppCompatActivity {
                         Toast.makeText(Signup2Activity.this, msg, Toast.LENGTH_SHORT).show();
                         break;
                     case "success":
-                        Toast.makeText(Signup2Activity.this, msg, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Signup2Activity.this, LoginActivity.class);
+                        //Toast.makeText(Signup2Activity.this, msg, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Signup2Activity.this, Signup3Activity.class);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.in_left,R.anim.out_right);
                         finish();
                         break;
                     default:

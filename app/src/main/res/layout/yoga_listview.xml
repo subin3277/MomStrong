@@ -8,7 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="2"
+        android:layout_margin="20dp"
+        android:background="@color/subpink">
         <TextView
             android:id="@+id/listview_pose"
             android:layout_width="0dp"
@@ -24,6 +26,7 @@
             android:id="@+id/listview_path"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_margin="10dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

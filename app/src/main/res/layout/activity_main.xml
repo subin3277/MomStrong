@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="MOM STRONG"
                 android:textSize="30sp"
-                android:textColor="#000000"
+                android:textColor="@color/maintext"
                 android:paddingTop="20dp"
                 android:layout_gravity="center"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
@@ -46,184 +46,178 @@
             android:textColor="#000000"
             android:background="#ffffff"/>
 
-
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:stretchColumns="0,2">
-
-            <TableRow
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-                <LinearLayout
-                    android:id="@+id/main_menu_info"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="출산 예정일"
+                android:textSize="30dp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="2021 - 06 - 28"
+                android:textSize="30dp"
+                android:textColor="@color/black"
+                android:background="#ffffff"
+                android:padding="10dp"
+                android:layout_marginBottom="5dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="117일 남았습니다."
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp"/>
+
+            <LinearLayout
+                android:id="@+id/main_menu_diet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:background="@color/mainpink">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/ic_baseline_restaurant_24"
+                    android:backgroundTint="#ffffff"
+                    android:layout_marginRight="15dp"
+                    />
+
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:background="@drawable/ic_baseline_assessment_24"
-                        android:layout_margin="15dp"
-                        android:layout_gravity="center"
-                        android:backgroundTint="#ffffff"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="산모 정보"
-                        android:textColor="#000000"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:layout_marginBottom="10dp"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="3dp"
                     android:layout_height="match_parent"
-                    android:background="#000000"
+                    android:text="식단 추천"
+                    android:textColor="#000000"
+                    android:gravity="center"
+                    android:textSize="25sp"
                     android:layout_marginBottom="10dp"
                     />
 
-                <LinearLayout
-                    android:id="@+id/main_menu_diet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:background="@drawable/ic_baseline_restaurant_24"
-                        android:layout_margin="15dp"
-                        android:layout_gravity="center"
-                        android:backgroundTint="#ffffff"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="식단 추천"
-                        android:textColor="#000000"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:layout_marginBottom="10dp"/>
-                </LinearLayout>
-
-            </TableRow>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="#000000"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                />
-
-            <TableRow
-                >
-                <LinearLayout
-                    android:id="@+id/main_menu_yoga"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:background="@drawable/ic_baseline_sports_handball_24"
-                        android:layout_margin="15dp"
-                        android:layout_gravity="center"
-                        android:backgroundTint="#ffffff"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="요가"
-                        android:textColor="#000000"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:layout_marginBottom="10dp"/>
-                </LinearLayout>
                 <View
-                    android:layout_width="3dp"
-                    android:layout_height="match_parent"
-                    android:background="#000000"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    />
-                <LinearLayout
-                    android:id="@+id/main_menu_hos"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_baseline_navigate_next_24"
+                    android:layout_gravity="right"/>
+            </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:background="@drawable/ic_baseline_local_hospital_24"
-                        android:layout_margin="15dp"
-                        android:layout_gravity="center"
-                        android:backgroundTint="#ffffff"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="병원"
-                        android:textColor="#000000"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:layout_marginBottom="10dp"/>
-                </LinearLayout>
-
-            </TableRow>
-
-            <View
+            <LinearLayout
+                android:id="@+id/main_menu_yoga"
                 android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="#000000"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                />
-
-            <TableRow
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
-                >
+                android:background="@color/mainpink">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="설정"
-                    android:textColor="#000000"
-                    android:gravity="center"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="10dp"/>
-
-                <View
-                    android:layout_width="3dp"
-                    android:layout_height="match_parent"
-                    android:background="#000000"
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/ic_baseline_sports_handball_24"
+                    android:backgroundTint="#ffffff"
+                    android:layout_marginRight="15dp"
                     />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="로그아웃"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="요가"
                     android:textColor="#000000"
                     android:gravity="center"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="10dp"/>
+                    android:textSize="25sp"
+                    android:layout_marginBottom="10dp"
+                    />
 
-            </TableRow>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_baseline_navigate_next_24"
+                    android:layout_gravity="right"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/main_menu_hos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/mainpink">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/ic_baseline_local_hospital_24"
+                    android:backgroundTint="#ffffff"
+                    android:layout_marginRight="15dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="병원 정보"
+                    android:textColor="#000000"
+                    android:gravity="center"
+                    android:textSize="25sp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_baseline_navigate_next_24"
+                    android:layout_gravity="right"/>
+            </LinearLayout>
 
 
-        </TableLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="설정"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:background="@color/mainpink"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

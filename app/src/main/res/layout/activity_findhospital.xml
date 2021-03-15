@@ -13,11 +13,11 @@
         android:layout_height="wrap_content"
         android:text="인근 병원 찾기"
         android:textSize="30sp"
-        android:textColor="#000000"
+        android:textColor="@color/maintext"
         android:gravity="center"
         android:paddingTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="#FFD9EC"
+        android:background="@color/mainpink"
         />
 
     <LinearLayout
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="20dp"
-            android:background="#b2ebf2"/>
+            android:background="@color/subpink"/>
         <Button
             android:id="@+id/findhos_btn_setlocation"
             android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="20dp"
-            android:background="#b2ebf2"/>
+            android:background="@color/subpink"/>
     </LinearLayout>
 
     <LinearLayout

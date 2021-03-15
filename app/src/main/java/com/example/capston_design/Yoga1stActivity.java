@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +23,7 @@ public class Yoga1stActivity extends AppCompatActivity {
     private ArrayList<YogaItem> firstlist =new ArrayList<>();
     RecyclerView listview;
     YogaAdapter adapter;
+    Button button;
 
     private String YOGA1st_URL = "http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st";
 
@@ -31,6 +33,7 @@ public class Yoga1stActivity extends AppCompatActivity {
         setContentView(R.layout.activity_yoga1st);
 
         listview=findViewById(R.id.yoga1st_listview);
+        button = findViewById(R.id.yoga1st_button);
 
 
         adapter = new YogaAdapter(firstlist,Yoga1stActivity.this);
@@ -56,6 +59,15 @@ public class Yoga1stActivity extends AppCompatActivity {
             }
         });
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Yoga1stActivity.this,CameraActivity.class);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.in_left,R.anim.out_right);
+            }
+        });
     }
 
     private class GetYoga1st extends AsyncTask<Void,Void,Void>{

@@ -18,7 +18,7 @@
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFD9EC">
+            android:background="@color/mainpink">
 
             <TextView
                 android:id="@+id/info_title"
@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="산모 정보"
                 android:textSize="30sp"
-                android:textColor="#000000"
+                android:textColor="@color/maintext"
                 android:paddingTop="20dp"
                 android:layout_gravity="center"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"

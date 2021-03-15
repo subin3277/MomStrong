@@ -38,7 +38,7 @@
                 android:id="@+id/main_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MOM STRONG"
+                android:text="요가 자세 교정"
                 android:textSize="30sp"
                 android:textColor="#442c2e"
                 android:paddingTop="20dp"
