@@ -181,18 +181,32 @@ public class LoginActivity extends AppCompatActivity {
 
                 try {
                     JSONObject responseJSON = new JSONObject(response);
+
+                    Log.e("json :", responseJSON.toString());
+
                     String result = (String) responseJSON.get("res_state");
                     String msg = (String) responseJSON.get("res_msg");
-
+                    JSONObject data = responseJSON.getJSONObject("res_data");
 
                     switch (result) {
                         case "invalid_data":
                             Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
                             break;
                         case "success":
-
                             Toast.makeText(LoginActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+                            String idx = data.getString("idx");
+                            String name = data.getString("userName");
+                            String date = data.getString("expectedDate");
+
+                            String[] date1 = date.split("T");
+
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("user_idx",idx);
+                            bundle.putString("user_name",name);
+                            bundle.putString("expectedDate",date1[0]);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                             overridePendingTransition(R.anim.in_left,R.anim.out_right);
                             finish();

@@ -11,13 +11,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private Context context =this;
 
     LinearLayout diet,yoga,hosp;
+    TextView expect,tv_dday,tv_navi_name;
+    String name,idx,expectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +41,20 @@ public class MainActivity extends AppCompatActivity {
         diet=findViewById(R.id.main_menu_diet);
         yoga=findViewById(R.id.main_menu_yoga);
         hosp=findViewById(R.id.main_menu_hos);
+        expect = findViewById(R.id.main_expectdate);
+        tv_dday=findViewById(R.id.main_dday);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+
+        name = bundle.getString("user_name");
+        idx = bundle.getString("user_idx");
+        expectedDate = bundle.getString("expectedDate");
+        expect.setText(expectedDate);
+
+        String[] expectedDatelist = expectedDate.split("-");
+        getDday(Integer.parseInt(expectedDatelist[0]),Integer.parseInt(expectedDatelist[1])-1,Integer.parseInt(expectedDatelist[2]));
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -54,12 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 String title = item.getTitle().toString();
 
-                if (id==R.id.tab_info){
-                    Intent intent = new Intent(MainActivity.this, InformationActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else if (id==R.id.tab_eat){
+                if (id==R.id.tab_eat){
                     Intent intent = new Intent(MainActivity.this, DietActivity.class);
                     startActivity(intent);
                     finish();
@@ -79,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
 
         diet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,4 +138,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void getDday(int year, int month, int day){
+        try {
+            Calendar today = Calendar.getInstance();
+            Calendar dday = Calendar.getInstance();
+
+            dday.set(year,month,day);
+
+            long l_dday = dday.getTimeInMillis()/(24*60*60*1000);
+            long l_today = today.getTimeInMillis()/(24*60*60*1000);
+
+            long substract = l_dday-l_today;
+
+            Log.e("substract", String.valueOf(substract));
+            tv_dday.setText(substract+"일 남았습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

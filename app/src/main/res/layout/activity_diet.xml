@@ -52,117 +52,123 @@
             android:layout_marginLeft="10dp"
             />
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="밥"
-                android:textColor="@color/maintext"
-                android:textSize="20sp"
-                android:background="@color/mainpink"
-                android:paddingLeft="10dp"
-                android:padding="5dp"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/diet_listview_rice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"/>
-
-            <Button
-                android:id="@+id/diet_btn_next1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="다음"
-                android:layout_gravity="right"/>
-
-            <TextView
-                android:id="@+id/diet_tv_soup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="국"
-                android:textColor="@color/maintext"
-                android:textSize="20sp"
-                android:background="@color/mainpink"
-                android:paddingLeft="10dp"
-                android:padding="5dp"
-                android:visibility="gone"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/diet_listview_soup"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:visibility="gone"/>
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/diet_btn_next2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="다음"
-                android:layout_gravity="right"
-                android:visibility="gone"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="밥"
+                    android:textColor="@color/maintext"
+                    android:textSize="20sp"
+                    android:background="@color/mainpink"
+                    android:paddingLeft="10dp"
+                    android:padding="5dp"/>
 
-            <TextView
-                android:id="@+id/diet_tv_first"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="첫번째 반찬"
-                android:textColor="@color/maintext"
-                android:textSize="20sp"
-                android:background="@color/mainpink"
-                android:paddingLeft="10dp"
-                android:padding="5dp"
-                android:visibility="gone"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/diet_listview_rice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/diet_listview_first"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:visibility="gone"/>
+                <Button
+                    android:id="@+id/diet_btn_next1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="다음"
+                    android:layout_gravity="right"/>
 
-            <Button
-                android:id="@+id/diet_btn_next3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="다음"
-                android:layout_gravity="right"
-                android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/diet_tv_soup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="국"
+                    android:textColor="@color/maintext"
+                    android:textSize="20sp"
+                    android:background="@color/mainpink"
+                    android:paddingLeft="10dp"
+                    android:padding="5dp"
+                    android:visibility="gone"/>
 
-            <TextView
-                android:id="@+id/diet_tv_second"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="두번째 반찬"
-                android:textColor="@color/maintext"
-                android:textSize="20sp"
-                android:background="@color/mainpink"
-                android:paddingLeft="10dp"
-                android:padding="5dp"
-                android:visibility="gone"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/diet_listview_soup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/diet_listview_second"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:visibility="gone"/>
+                <Button
+                    android:id="@+id/diet_btn_next2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="다음"
+                    android:layout_gravity="right"
+                    android:visibility="gone"/>
 
-            <Button
-                android:id="@+id/diet_btn_finish"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="완료"
-                android:layout_gravity="right"
-                android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/diet_tv_first"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="첫번째 반찬"
+                    android:textColor="@color/maintext"
+                    android:textSize="20sp"
+                    android:background="@color/mainpink"
+                    android:paddingLeft="10dp"
+                    android:padding="5dp"
+                    android:visibility="gone"/>
 
-        </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/diet_listview_first"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/diet_btn_next3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="다음"
+                    android:layout_gravity="right"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/diet_tv_second"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="두번째 반찬"
+                    android:textColor="@color/maintext"
+                    android:textSize="20sp"
+                    android:background="@color/mainpink"
+                    android:paddingLeft="10dp"
+                    android:padding="5dp"
+                    android:visibility="gone"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/diet_listview_second"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/diet_btn_finish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="완료"
+                    android:layout_gravity="right"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+        </ScrollView>
+
 
 
 

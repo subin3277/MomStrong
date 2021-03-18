@@ -49,11 +49,7 @@ public class YogaActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 String title = item.getTitle().toString();
 
-                if (id == R.id.tab_info) {
-                    Intent intent = new Intent(YogaActivity.this, InformationActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else if (id == R.id.tab_eat) {
+                if (id == R.id.tab_eat) {
                     Intent intent = new Intent(YogaActivity.this, DietActivity.class);
                     startActivity(intent);
                     finish();
@@ -77,6 +73,7 @@ public class YogaActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         thirdbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

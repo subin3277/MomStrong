@@ -45,7 +45,7 @@ public class DietActivity extends AppCompatActivity {
     static DietAdapter dietAdapter_rice,dietAdapter_soup,dietAdapter_first,dietAdapter_second;
     ItemTouchHelper helper;
     static DietItem riceitem, soupitem,firstitem,seconditem;
-    static String ricename=null,soupname=null,firstname=null,secondname=null;
+    static String ricename,soupname,firstname,secondname;
     Button finish1,finish2,finish3,finish4;
     TextView soup,first,second,tvnull;
     static int users_age=22;
@@ -106,11 +106,7 @@ public class DietActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 String title = item.getTitle().toString();
 
-                if (id == R.id.tab_info) {
-                    Intent intent = new Intent(DietActivity.this, InformationActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else if (id == R.id.tab_eat) {
+                if (id == R.id.tab_eat) {
                     Intent intent = new Intent(DietActivity.this, DietActivity.class);
                     startActivity(intent);
                     finish();
@@ -219,15 +215,6 @@ public class DietActivity extends AppCompatActivity {
                 finshlist.add(seconditem.idx);
                 new PostDiet().execute();
 
-                Intent intent = new Intent(DietActivity.this,DietinfoActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("ricename",ricename);
-                bundle.putString("soupname",soupname);
-                bundle.putString("side1name",firstname);
-                bundle.putString("side2name",secondname);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
             }
         });
     }
@@ -682,7 +669,16 @@ public class DietActivity extends AppCompatActivity {
         protected void onPostExecute(String response) {
             super.onPostExecute(response);
 
-
+            Intent intent = new Intent(DietActivity.this,DietinfoActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("ricename",ricename);
+            bundle.putString("soupname",soupname);
+            bundle.putString("side1name",firstname);
+            bundle.putString("side2name",secondname);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            overridePendingTransition(R.anim.in_left,R.anim.out_right);
+            finish();
         }
     }
 }

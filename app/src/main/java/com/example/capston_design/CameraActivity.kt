@@ -52,11 +52,7 @@ class CameraActivity : AppCompatActivity() {
       drawerLayout!!.closeDrawers()
       val id = item.itemId
       val title = item.title.toString()
-      if (id == R.id.tab_info) {
-        val intent = Intent(this@CameraActivity, InformationActivity::class.java)
-        startActivity(intent)
-        finish()
-      } else if (id == R.id.tab_eat) {
+      if (id == R.id.tab_eat) {
         val intent = Intent(this@CameraActivity, DietActivity::class.java)
         startActivity(intent)
         finish()

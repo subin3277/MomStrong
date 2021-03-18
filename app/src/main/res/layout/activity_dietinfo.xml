@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/hosp_drawer_layout"
+    android:id="@+id/dietinfo_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -18,7 +18,7 @@
         >
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/hosp_toolbar"
+            android:id="@+id/dietinfo_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mainpink"
@@ -39,38 +39,48 @@
         </androidx.appcompat.widget.Toolbar>
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="오늘의 추천은"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textColor="@color/black"/>
+        <TextView
             android:id="@+id/dietinfo_rice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="짜잔~~~~"
-            android:textSize="50sp"
-            android:gravity="center"/>
+            android:textSize="30sp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            />
 
         <TextView
             android:id="@+id/dietinfo_soup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="짜잔~~~~"
-            android:textSize="50sp"
-            android:gravity="center"/>
+            android:textSize="30sp"
+            android:gravity="center"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/dietinfo_side1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="짜잔~~~~"
-            android:textSize="50sp"
-            android:gravity="center"/>
+            android:textSize="30sp"
+            android:gravity="center"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/dietinfo_side2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="짜잔~~~~"
-            android:textSize="50sp"
-            android:gravity="center"/>
-
-
+            android:textSize="30sp"
+            android:gravity="center"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 

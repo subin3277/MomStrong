@@ -110,12 +110,7 @@ public class HospitalActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 String title = item.getTitle().toString();
 
-                if (id==R.id.tab_info){
-                    Intent intent = new Intent(HospitalActivity.this, InformationActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else if (id==R.id.tab_eat){
+               if (id==R.id.tab_eat){
                     Intent intent = new Intent(HospitalActivity.this, DietActivity.class);
                     startActivity(intent);
                     finish();
