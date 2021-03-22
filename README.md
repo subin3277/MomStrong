@@ -37,6 +37,33 @@
 # 설계
 
 # 개발환경
+<details>
+  <summary>상세 내용 확인</summary>
+  <div markdown="1">
+       
+### BE
+| 구분 | 개발환경 | 개발도구 | 개발언어 |
+| ----- | --------- | --------- | --------- |
+|Server|VSCode|Node.js|JavaScript|
+|DB|Robo 3T|MongoDB|MongoDB|
+|\*HF|Pycharm|-|Python|
+
+\*CF : Hybrid Filtering
+  
+### INFRA-AWS
+| 구분 | 서비스 |
+| --------- | ------------- |
+|Computing|EC2 CentOS7|
+|Storage|S3|
+|CDN|CloudFront|
+  
+### FE
+|구분|개발환경|개발도구|개발언어|
+|--|--| -- |--|
+|Front|Android Studio| - | Java & Kotlin |
+  
+  </div>
+</details>
 
 # API DOCS
 
