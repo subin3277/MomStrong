@@ -70,6 +70,20 @@ public class YogaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(YogaActivity.this,Yoga1stActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("yoga_idx","1st");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        secondbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(YogaActivity.this,Yoga1stActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("yoga_idx","2nd");
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -78,6 +92,9 @@ public class YogaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(YogaActivity.this,Yoga1stActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("yoga_idx","3rd");
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

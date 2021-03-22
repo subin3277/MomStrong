@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout diet,yoga,hosp;
     TextView expect,tv_dday,tv_navi_name;
-    String name,idx,expectedDate;
+    String name,expectedDate;
+    static String user_idx,user_id,user_age;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
 
         name = bundle.getString("user_name");
-        idx = bundle.getString("user_idx");
+        user_id = bundle.getString("id");
+        user_idx = bundle.getString("user_idx");
         expectedDate = bundle.getString("expectedDate");
+        user_age = bundle.getString("user_age");
         expect.setText(expectedDate);
 
         String[] expectedDatelist = expectedDate.split("-");

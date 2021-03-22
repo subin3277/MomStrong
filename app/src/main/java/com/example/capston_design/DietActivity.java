@@ -48,8 +48,6 @@ public class DietActivity extends AppCompatActivity {
     static String ricename,soupname,firstname,secondname;
     Button finish1,finish2,finish3,finish4;
     TextView soup,first,second,tvnull;
-    static int users_age=22;
-    static int users_idx=4;
 
     static ArrayList<String> ricelist = new ArrayList<>();
     static ArrayList<String> souplist = new ArrayList<>();
@@ -266,7 +264,7 @@ public class DietActivity extends AppCompatActivity {
 
                 try {
                     //userid 추가(모든 post에서)
-                    jsonObject_rice.put("users_age",users_age);
+                    jsonObject_rice.put("users_age",MainActivity.user_age);
                     jsonObject_rice.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_rice.put("swipeRice", ricelist);
                 } catch (JSONException e) {
@@ -357,7 +355,7 @@ public class DietActivity extends AppCompatActivity {
                 connection.setDoInput(true);
 
                 try {
-                    jsonObject_soup.put("users_age",users_age);
+                    jsonObject_soup.put("users_age",MainActivity.user_age);
                     jsonObject_soup.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_soup.put("riceDietName",ricename);
                     jsonObject_soup.put("swipeSoup", souplist);
@@ -445,8 +443,8 @@ public class DietActivity extends AppCompatActivity {
                 connection.setDoInput(true);
 
                 try {
-                    jsonObject_first.put("users_idx",users_idx);
-                    jsonObject_first.put("users_age",users_age);
+                    jsonObject_first.put("users_idx",MainActivity.user_idx);
+                    jsonObject_first.put("users_age",MainActivity.user_age);
                     jsonObject_first.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_first.put("riceDietName",ricename);
                     jsonObject_first.put("soupDietName",soupname);
@@ -539,8 +537,8 @@ public class DietActivity extends AppCompatActivity {
                 connection.setDoInput(true);
 
                 try {
-                    jsonObject_second.put("users_idx",users_idx);
-                    jsonObject_second.put("users_age",users_age);
+                    jsonObject_second.put("users_idx",MainActivity.user_idx);
+                    jsonObject_second.put("users_age",MainActivity.user_age);
                     jsonObject_second.put("expectedDate","2021-09-06T00:00:00.000Z");
                     jsonObject_second.put("riceDietName",ricename);
                     jsonObject_second.put("soupDietName",soupname);
@@ -633,7 +631,7 @@ public class DietActivity extends AppCompatActivity {
                 connection.setDoInput(true);
 
                 try {
-                    jsonObject_finsh.put("user_idx",users_idx);
+                    jsonObject_finsh.put("user_idx",MainActivity.user_idx);
                     jsonObject_finsh.put("diets_idx",finshlist);
                 } catch (JSONException e) {
                     e.printStackTrace();

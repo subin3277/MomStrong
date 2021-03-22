@@ -21,6 +21,8 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.getIntent
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -182,6 +184,7 @@ class PosenetActivity :
 
   var imagestate = true
   var imagecorrect = 0
+  lateinit var yoga_idx:String
 
   /** [CameraDevice.StateCallback] is called when [CameraDevice] changes its state.   */
   private val stateCallback = object : CameraDevice.StateCallback() {
@@ -243,6 +246,7 @@ class PosenetActivity :
     surfaceView = view.findViewById(R.id.surfaceView)
     imageview = view.findViewById(R.id.surfaceView2)
 
+
     val display = requireActivity().windowManager.defaultDisplay
     val size = Point()
     display.getSize(size)
@@ -250,7 +254,7 @@ class PosenetActivity :
     IMAGEWEIGHT = size.x
     IMAGEHEIGHT = (size.y*0.3).toInt()
 
-    run("http://13.125.245.6:3000/api/yogas/getYogas?trimester=1st")
+    run("http://13.125.245.6:3000/api/yogas/getYogas?trimester="+Yoga1stActivity.yoga_idx)
     surfaceHolder = surfaceView!!.holder
 
   }

@@ -198,6 +198,8 @@ public class LoginActivity extends AppCompatActivity {
                             String idx = data.getString("idx");
                             String name = data.getString("userName");
                             String date = data.getString("expectedDate");
+                            String user_id = data.getString("id");
+                            String age = data.getString("age");
 
                             String[] date1 = date.split("T");
 
@@ -206,6 +208,8 @@ public class LoginActivity extends AppCompatActivity {
                             bundle.putString("user_idx",idx);
                             bundle.putString("user_name",name);
                             bundle.putString("expectedDate",date1[0]);
+                            bundle.putString("user_id",id);
+                            bundle.putString("user_age",age);
                             intent.putExtras(bundle);
                             startActivity(intent);
                             overridePendingTransition(R.anim.in_left,R.anim.out_right);

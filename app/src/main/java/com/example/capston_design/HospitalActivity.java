@@ -269,8 +269,8 @@ public class HospitalActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids){
             HttpHandler cal = new HttpHandler();
 
-            String GETCAL_URL = "http://13.125.245.6:3000/api/calendars/getCalendars?users_id=chlrkdgml11@naver.com";
-            String cal_json = cal.makeServiceCall(GETCAL_URL);
+            String GETCAL_URL = "http://13.125.245.6:3000/api/calendars/getCalendars?users_id=";
+            String cal_json = cal.makeServiceCall(GETCAL_URL+MainActivity.user_id);
             if (cal_json !=null){
                 try {
                     JSONObject jsonObject = new JSONObject(cal_json);
@@ -280,7 +280,6 @@ public class HospitalActivity extends AppCompatActivity {
                     Log.e("cal",cal_array.toString());
                     for (int i=0;i<cal_array.length();i++){
                         JSONObject data = cal_array.getJSONObject(i);
-
 
                         String id=data.getString("users_id");
                         String date = data.getString("date");

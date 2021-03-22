@@ -42,8 +42,7 @@ public class AddcalActivity extends AppCompatActivity {
     String year,month,day,setdate,todaydate;
     int y,m,d;
 
-    private String CALPOST_URL="";
-    //http://13.125.245.6:3000/api/calendars/postCalendars
+    private String CALPOST_URL="http://13.125.245.6:3000/api/calendars/postCalendars";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +126,7 @@ public class AddcalActivity extends AppCompatActivity {
 
                 JSONObject addcal = new JSONObject();
                 try {
+                    addcal.put("users_id",MainActivity.user_id);
                     addcal.put("date",txtdate);
                     addcal.put("comment",txtcomment);
                 } catch (Exception e) {
@@ -156,7 +156,7 @@ public class AddcalActivity extends AppCompatActivity {
                 } catch (IOException e){
                     e.printStackTrace();
                 }
-
+/*
                 //알림 등록
                 calendar_alarm.set(Calendar.YEAR,datePicker.getYear());
                 calendar_alarm.set(Calendar.MONTH,datePicker.getMonth());
@@ -174,6 +174,7 @@ public class AddcalActivity extends AppCompatActivity {
                         timePicker.getHour()+"시"+timePicker.getMinute()+"분");
 
                 //finish();
+                */
             }
         });
 
