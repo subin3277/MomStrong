@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.capston_design">
+    package="com.lck.capston_design">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -21,35 +21,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Signup3Activity"></activity>
-        <activity android:name=".YogacamActivity" />
-
-        <receiver android:name=".Alarm_Receiver" />
+        <activity android:name="com.lck.capston_design.SettingActivity"/>
+        <activity android:name="com.lck.capston_design.Signup3Activity" />
+        <receiver android:name="com.lck.capston_design.Alarm_Receiver" />
 
         <service
-            android:name=".RingtonPlayingService"
+            android:name="com.lck.capston_design.RingtonPlayingService"
             android:enabled="true" />
 
-        <activity android:name=".CameraActivity" />
-        <activity android:name=".AddcalActivity" />
-        <activity android:name=".DietinfoActivity" />
-        <activity android:name=".YogainfoActivity" />
-        <activity android:name=".Yoga1stActivity" />
-        <activity android:name=".Signup2Activity" />
-        <activity android:name=".YogaActivity" />
-        <activity android:name=".InformationActivity" />
-        <activity android:name=".HospitalActivity" />
-        <activity android:name=".DietActivity" />
-        <activity android:name=".FindhospitalActivity" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name="com.lck.capston_design.CameraActivity" />
+        <activity android:name="com.lck.capston_design.AddcalActivity" />
+        <activity android:name="com.lck.capston_design.DietinfoActivity" />
+        <activity android:name="com.lck.capston_design.YogainfoActivity" />
+        <activity android:name="com.lck.capston_design.Yoga1stActivity" />
+        <activity android:name="com.lck.capston_design.Signup2Activity" />
+        <activity android:name="com.lck.capston_design.YogaActivity" />
+        <activity android:name="com.lck.capston_design.InformationActivity" />
+        <activity android:name="com.lck.capston_design.HospitalActivity" />
+        <activity android:name="com.lck.capston_design.DietActivity" />
+        <activity android:name="com.lck.capston_design.FindhospitalActivity" />
+        <activity android:name="com.lck.capston_design.SignupActivity" />
+        <activity android:name="com.lck.capston_design.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name="com.lck.capston_design.MainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -61,6 +60,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCySCJwEV7C8pwRABTbpmQ__Eu7nOaLBr4" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~6300978111"/>
+
     </application>
 
 </manifest>

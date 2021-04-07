@@ -18,7 +18,10 @@
 
         <item
             android:id="@+id/tab_hos"
-            android:title="병원 정보"/>
+            android:title="일정"/>
+        <item
+            android:id="@+id/tab_findhos"
+            android:title="병원 찾기"/>
     </group>
 
     <item android:title="설정">
