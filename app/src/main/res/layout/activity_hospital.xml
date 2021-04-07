@@ -27,7 +27,7 @@
                 android:id="@+id/hosp_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="병원 정보"
+                android:text="일정"
                 android:textSize="30sp"
                 android:textColor="@color/maintext"
                 android:paddingTop="20dp"

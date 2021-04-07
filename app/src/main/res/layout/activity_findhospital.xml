@@ -1,146 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/findhosp_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_findhospital"
-    tools:context=".FindhospitalActivity">
-
-    <TextView
-        android:id="@+id/findhos_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="인근 병원 찾기"
-        android:textSize="30sp"
-        android:textColor="@color/maintext"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/mainpink"
-        />
+    android:fitsSystemWindows="true"
+    android:layout_gravity="start"
+    tools:openDrawer="start">
 
     <LinearLayout
-        android:id="@+id/findhos_ll_btn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/findhos_title">
-        <Button
-            android:id="@+id/findhos_btn_thislocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="현재 위치 가져오기"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="20dp"
-            android:background="@color/subpink"/>
-        <Button
-            android:id="@+id/findhos_btn_setlocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="직접 위치 설정하기"
-            android:layout_weight="1"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="20dp"
-            android:background="@color/subpink"/>
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/layout_findhospital"
+        tools:context=".FindhospitalActivity"
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/findhos_searchadd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/findhos_ll_btn"
-        android:background="@drawable/border"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:weightSum="3"
-        android:visibility="gone"
-       >
-
-        <LinearLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/findhosp_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:layout_marginLeft="20dp"
-            android:weightSum="10"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@color/mainpink"
             >
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="광역시/도"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:layout_weight="3.5"/>
-
-            <Spinner
-                android:id="@+id/findhos_spinner_sido"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="6"
-                android:entries="@array/spinner_region"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:layout_marginLeft="20dp"
-            android:weightSum="10"
-            android:layout_weight="1"
-            >
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="시/군/구"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:layout_weight="3.5"/>
-
-            <Spinner
-                android:id="@+id/findhos_spinner_sigun"
+                android:id="@+id/findhosp_title"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="6"/>
+                android:layout_height="wrap_content"
+                android:text="인근 병원 찾기"
+                android:textSize="30sp"
+                android:textColor="@color/maintext"
+                android:paddingTop="20dp"
+                android:layout_gravity="center"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                />
 
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/findhos_ll_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginTop="10dp"
+            >
+            <Button
+                android:id="@+id/findhos_btn_thislocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="현재 위치 가져오기"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="20dp"
+                android:background="@color/subpink"/>
+            <Button
+                android:id="@+id/findhos_btn_setlocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="직접 위치 설정하기"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/subpink"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/findhos_searchadd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/findhos_ll_btn"
+            android:background="@drawable/border"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:weightSum="3"
+            android:visibility="gone"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginLeft="20dp"
+                android:weightSum="10"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="광역시/도"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:layout_weight="3.5"/>
+
+                <Spinner
+                    android:id="@+id/findhos_spinner_sido"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"
+                    android:entries="@array/spinner_region"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:layout_marginLeft="20dp"
+                android:weightSum="10"
+                android:layout_weight="1"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="시/군/구"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:layout_weight="3.5"/>
+
+                <Spinner
+                    android:id="@+id/findhos_spinner_sigun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="6"/>
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/findhos_btn_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="검색"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/mainpink"
+                android:layout_marginBottom="10dp"/>
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/findhos_btn_search"
+        <fragment
+            android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="검색"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="#b2ebf2"
-            android:layout_marginBottom="10dp"/>
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            />
 
     </LinearLayout>
 
-    <fragment
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/findhos_searchadd"
-        android:layout_margin="10dp"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity ="start"
+        app:headerLayout="@layout/navi_header"
+        app:menu="@menu/menu_drawer"
         />
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

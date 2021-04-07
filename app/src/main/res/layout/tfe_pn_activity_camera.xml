@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            tools:context="com.example.capston_design.CameraActivity"
+            tools:context="com.lck.capston_design.CameraActivity"
             />
 
     </LinearLayout>
