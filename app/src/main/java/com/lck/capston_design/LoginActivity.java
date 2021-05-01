@@ -61,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         saveToken();
 
         signup=findViewById(R.id.login_btn_signup);
-        //go = findViewById(R.id.login_btn_go);
         id = findViewById(R.id.login_et_id);
         password = findViewById(R.id.login_et_password);
         login=findViewById(R.id.login_btn_login);
@@ -70,12 +69,12 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
         loginid =auto.getString("inputId",null);
         loginpw = auto.getString("inputPw",null);
-        /*
-        id.setText("chlrkdgml1106@naver.com");
-        password.setText("kanghee11");
 
-        Log.e("loginstate :",loginid);
-*/
+        SharedPreferences auto2 = getSharedPreferences("signup", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = auto2.edit();
+        editor2.clear();
+        editor2.commit();
+
         if (loginid!=null && loginpw!=null){
             login(loginid,loginpw);
         }

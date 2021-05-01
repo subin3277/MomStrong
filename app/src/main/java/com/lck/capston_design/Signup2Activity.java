@@ -2,8 +2,10 @@ package com.lck.capston_design;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +40,7 @@ public class Signup2Activity extends AppCompatActivity {
     Button signupbtn,backbtn;
     String txtname,txtage,txtweight,txtdate;
     int numage,numweigt;
+    String spname,spage,spdate;
 
     String SIGNUP_URL = "http://13.125.245.6:3000/api/users/signup";
 
@@ -66,6 +69,17 @@ public class Signup2Activity extends AppCompatActivity {
         password = bundle.getString("password");
         password2 = bundle.getString("password2");
 
+        SharedPreferences auto = getSharedPreferences("signup", Activity.MODE_PRIVATE);
+        spname =auto.getString("name",null);
+        spage = auto.getString("age",null);
+        spdate = auto.getString("date",null);
+
+        if(spname!=null || spage!=null || spdate!=null){
+            name.setText(spname);
+            age.setText(spage);
+            expecteddate.setText(spdate);
+        }
+
         expecteddate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,8 +92,16 @@ public class Signup2Activity extends AppCompatActivity {
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences.Editor signup = auto.edit();
+                signup.putString("name",name.getText().toString());
+                signup.putString("age",age.getText().toString());
+                signup.putString("date",expecteddate.getText().toString());
+                signup.commit();
+
                 Intent intent1 = new Intent(Signup2Activity.this,SignupActivity.class);
                 startActivity(intent1);
+                overridePendingTransition(R.anim.in_right,R.anim.out_left);
+                finish();
             }
         });
         signupbtn.setOnClickListener(new View.OnClickListener() {
@@ -87,9 +109,6 @@ public class Signup2Activity extends AppCompatActivity {
             public void onClick(View view) {
                 txtname = name.getText().toString();
                 txtage = age.getText().toString();
-
-                //txtweight = weight.getText().toString();
-
                 txtdate = expecteddate.getText().toString();
 
                 if ((txtname.equals(""))||(txtage.equals(""))||(txtdate.equals(""))){
@@ -246,7 +265,11 @@ public class Signup2Activity extends AppCompatActivity {
                         Toast.makeText(Signup2Activity.this, msg, Toast.LENGTH_SHORT).show();
                         break;
                     case "success":
-                        //Toast.makeText(Signup2Activity.this, msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Signup2Activity.this, msg, Toast.LENGTH_SHORT).show();
+                        SharedPreferences auto = getSharedPreferences("signup", Activity.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = auto.edit();
+                        editor.clear();
+                        editor.commit();
                         Intent intent = new Intent(Signup2Activity.this, Signup3Activity.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.in_left,R.anim.out_right);
