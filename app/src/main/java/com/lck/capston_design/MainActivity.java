@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -28,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
     private Context context =this;
 
     LinearLayout diet,yoga,hosp,cal;
-    TextView expect,tv_dday,tv_navi_name;
+    TextView tv_navi_name,setting;
+    static TextView expect, tv_dday;
     String name;
     static String user_idx,user_id,user_age,user_expecteddate;
+    private long backBtnTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +46,13 @@ public class MainActivity extends AppCompatActivity {
         expect = findViewById(R.id.main_expectdate);
         tv_dday=findViewById(R.id.main_dday);
         cal=findViewById(R.id.main_menu_calendar);
+        setting = findViewById(R.id.main_menu_setting);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
         name = bundle.getString("user_name");
-        user_id = bundle.getString("id");
+        user_id = bundle.getString("user_id");
         user_idx = bundle.getString("user_idx");
         user_expecteddate = bundle.getString("expectedDate");
         user_age = bundle.getString("user_age");
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, DietActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_left,R.anim.out_right);
-                finish();
+
             }
         });
         yoga.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, YogaActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_left,R.anim.out_right);
-                finish();
+
             }
         });
         hosp.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, FindhospitalActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_left,R.anim.out_right);
-                finish();
+
             }
         });
         cal.setOnClickListener(new View.OnClickListener() {
@@ -153,12 +157,34 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, HospitalActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.in_left,R.anim.out_right);
-                finish();
+
             }
         });
-
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.in_left,R.anim.out_right);
+            }
+        });
     }
 
+    @Override
+    public void onBackPressed() {
+        long curTime = System.currentTimeMillis();
+        long gapTime = curTime - backBtnTime;
+
+        if(0 <= gapTime && 2000 >= gapTime) {
+            super.onBackPressed();
+        }
+        else {
+            backBtnTime = curTime;
+            Toast.makeText(this, "한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -170,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void getDday(int year, int month, int day){
+    static public void getDday(int year, int month, int day){
         try {
             Calendar today = Calendar.getInstance();
             Calendar dday = Calendar.getInstance();

@@ -75,7 +75,7 @@ public class SettingActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.setting_drawer_layout);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.setting_nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -148,6 +148,10 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SettingActivity.this,LoginActivity.class);
                 startActivity(intent);
+                SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = auto.edit();
+                editor.clear();
+                editor.commit();
                 finish();
             }
         });
@@ -243,6 +247,7 @@ public class SettingActivity extends AppCompatActivity {
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
+
                 Log.e("json","생성한 json"+jsonObject.toString());
 
                 outputStream = connection.getOutputStream();
@@ -287,8 +292,9 @@ public class SettingActivity extends AppCompatActivity {
                 switch (result) {
                     case "success":
                         Toast.makeText(SettingActivity.this, msg, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(SettingActivity.this,MainActivity.class);
-                        startActivity(intent);
+                        MainActivity.expect.setText(txtdate);
+                        String[] expectedDatelist = txtdate.split("-");
+                        MainActivity.getDday(Integer.parseInt(expectedDatelist[0]),Integer.parseInt(expectedDatelist[1])-1,Integer.parseInt(expectedDatelist[2]));
                         finish();
                         break;
                     default:

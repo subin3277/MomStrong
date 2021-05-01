@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
-    private AdView adView;
+    //private AdView adView;
     private String SIGNIN_URL="http://13.125.245.6:3000/api/users/signin";
 
     @Override
@@ -67,52 +67,50 @@ public class LoginActivity extends AppCompatActivity {
         login=findViewById(R.id.login_btn_login);
         CheckBox checkBox = findViewById(R.id.login_checkbox);
 
-        //SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
-        //loginid =auto.getString("inputId",null);
-        //loginpw = auto.getString("inputPw",null);
+        SharedPreferences auto = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        loginid =auto.getString("inputId",null);
+        loginpw = auto.getString("inputPw",null);
+        /*
         id.setText("chlrkdgml1106@naver.com");
         password.setText("kanghee11");
 
-        //Log.e("loginstate :",loginid);
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String txtid = id.getText().toString();
-                String txtpw = password.getText().toString();
-
-                if(txtid.equals("")||txtpw.equals("")){
-                    Toast.makeText(LoginActivity.this,"아이디와 비밀번호를 입력해주세요.",Toast.LENGTH_SHORT).show();
-                } else {
-
-                    login(txtid,txtpw);
-                }
-            }
-        });
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,SignupActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.in_left,R.anim.out_right);
-                finish();
-            }
-        });
-/*
-
-        go.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.in_left,R.anim.out_right);
-                finish();
-            }
-        });
+        Log.e("loginstate :",loginid);
 */
+        if (loginid!=null && loginpw!=null){
+            login(loginid,loginpw);
+        }
+        else {
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String txtid = id.getText().toString();
+                    String txtpw = password.getText().toString();
 
+                    if(txtid.equals("")||txtpw.equals("")){
+                        Toast.makeText(LoginActivity.this,"아이디와 비밀번호를 입력해주세요.",Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (checkBox.isChecked()){
+                            SharedPreferences.Editor autologin = auto.edit();
+                            autologin.putString("inputId",id.getText().toString());
+                            autologin.putString("inputPw",password.getText().toString());
+                            autologin.commit();
+                        }
+                        login(txtid,txtpw);
+                    }
+                }
+            });
+            signup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(LoginActivity.this,SignupActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.in_left,R.anim.out_right);
+                    finish();
+                }
+            });
+        }
 
-
+/*
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -127,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         adView.setAdSize(AdSize.BANNER);
         adView.setAdUnitId("\n"+"ca-app-pub-3940256099942544/6300978111");
         //내 아이디 : ca-app-pub-2495779931210599~6988515725
+        */
    }
 
     public void saveToken(){
@@ -228,12 +227,13 @@ public class LoginActivity extends AppCompatActivity {
                             bundle.putString("user_idx",idx);
                             bundle.putString("user_name",name);
                             bundle.putString("expectedDate",date);
-                            bundle.putString("user_id",id);
+                            bundle.putString("user_id",user_id);
                             bundle.putString("user_age",age);
                             intent.putExtras(bundle);
                             startActivity(intent);
                             overridePendingTransition(R.anim.in_left,R.anim.out_right);
                             finish();
+
                     }
 
 

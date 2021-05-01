@@ -83,7 +83,7 @@
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/main_nav_view"
+        android:id="@+id/setting_nav_view"
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity ="start"

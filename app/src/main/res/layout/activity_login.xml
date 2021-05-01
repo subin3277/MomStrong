@@ -119,6 +119,7 @@
         />
 
 -->
+<!--
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -135,9 +136,10 @@
             android:layout_gravity="center"
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-3940256099942544~6300978111">
-            <!--ca-app-pub-2495779931210599~6988515725-->
+            &lt;!&ndash;ca-app-pub-2495779931210599~6988515725&ndash;&gt;
         </com.google.android.gms.ads.AdView>
     </androidx.constraintlayout.widget.ConstraintLayout>
+-->
 
 
 </LinearLayout>
