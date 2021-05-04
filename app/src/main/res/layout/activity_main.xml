@@ -30,7 +30,6 @@
                 android:text="MOM STRONG"
                 android:textSize="30sp"
                 android:textColor="@color/maintext"
-                android:paddingTop="20dp"
                 android:layout_gravity="center"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 />
