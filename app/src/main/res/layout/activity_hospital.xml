@@ -30,7 +30,6 @@
                 android:text="일정"
                 android:textSize="30sp"
                 android:textColor="@color/maintext"
-                android:paddingTop="20dp"
                 android:layout_gravity="center"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 />
@@ -83,6 +82,11 @@
                 android:background="@color/subpink"
                 android:text="병원 일정 추가하기" />
 
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                />
             <Button
                 android:id="@+id/hosp_btn_findhos"
                 android:layout_width="0dp"
