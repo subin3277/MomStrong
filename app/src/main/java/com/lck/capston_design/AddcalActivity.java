@@ -128,7 +128,7 @@ public class AddcalActivity extends AppCompatActivity {
                 try {
                     addcal.put("users_id",MainActivity.user_id);
                     addcal.put("date",txtdate);
-                    addcal.put("comment",txtcomment);
+                    addcal.put("content",txtcomment);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

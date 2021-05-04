@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -17,10 +18,13 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -36,6 +40,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -53,6 +63,7 @@ public class HospitalActivity extends AppCompatActivity {
     MaterialCalendarView CalendarView;
     ListView listView;
     JSONArray cal_array = new JSONArray();
+    private String CALPOST_URL="http://13.125.245.6:3000/api/calendars/postCalendars";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,11 +149,13 @@ public class HospitalActivity extends AppCompatActivity {
         addcal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+/*
 
                 Intent intent = new Intent(HospitalActivity.this,AddcalActivity.class);
                 startActivity(intent);
+*/
 
-/*
+
                 final AddCalendarDialog dialog = new AddCalendarDialog(HospitalActivity.this, new CustomDialogClickListener() {
                     @Override
                     public void onPositiveClick() {
@@ -203,15 +216,13 @@ public class HospitalActivity extends AppCompatActivity {
                         }
 
                     }
-                });*/
+                });
             }
         });
 
         CalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-
-                Log.e("claview","실행");
 
                 ArrayList<HashMap<String,String>> cal_list2 = new ArrayList<>();
 

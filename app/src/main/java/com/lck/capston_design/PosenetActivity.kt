@@ -878,6 +878,8 @@ class PosenetActivity :
   fun nextimage(){
     Toast.makeText(context,"다음 자세로 넘어갑니다.",Toast.LENGTH_LONG).show()
 
+    imagecorrect = 0;
+
     videoAngleRIGHT_ELBOW = 0.0F
     videoAngleLEFT_ELBOW = 0.0F
     videoAngleRIGHT_KNEE = 0.0F
