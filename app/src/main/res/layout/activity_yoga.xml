@@ -31,7 +31,6 @@
                 android:text="요가"
                 android:textSize="30sp"
                 android:textColor="#000000"
-                android:paddingTop="20dp"
                 android:layout_gravity="center"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 />
