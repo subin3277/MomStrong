@@ -76,6 +76,10 @@ public class AddCalendarDialog extends Dialog {
                     txtmin=0+txtmin;
                 if (timePicker.getHour()<10)
                     txthour=0+txthour;
+                if ((datePicker.getMonth()+1)<10)
+                    txtmon=0+txtmon;
+                if (datePicker.getDayOfMonth()<10)
+                    txtday=0+txtday;
                 setdate=txtyear+"-"+txtmon+"-"+txtday+"T"+txthour+":"+txtmin+":00.000Z";
                 date2.setText(setdate);
                 date.setText(txtyear+"년"+txtmon+"월"+txtday+"일"+txthour+"시"+txtmin+"분");

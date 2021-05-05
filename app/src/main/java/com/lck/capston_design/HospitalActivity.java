@@ -185,8 +185,9 @@ public class HospitalActivity extends AppCompatActivity {
 
                         JSONObject addcal = new JSONObject();
                         try {
+                            addcal.put("users_id",MainActivity.user_id);
                             addcal.put("date",txtdate);
-                            addcal.put("comment",txtcomment);
+                            addcal.put("content",txtcomment);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -214,7 +215,7 @@ public class HospitalActivity extends AppCompatActivity {
                         } catch (IOException e){
                             e.printStackTrace();
                         }
-
+                        new GetCal().execute();
                     }
                 });
             }

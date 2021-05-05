@@ -627,31 +627,29 @@ class PosenetActivity :
     errorRateRIGHT_ELBOW = 100.0F
     errorRateLEFT_ELBOW = 100.0F
     errorRateRIGHT_KNEE = 100.0F
-    errorRateLEFT_KNEE = 100.0F
+    errorRateLEFT_KNEE = 100.0F       //각도 및 errorRate 초기화
 
     if (videochecks[6] and videochecks[8] and videochecks[10]) {
       videoAngleRIGHT_ELBOW = getAngle(videoPositions[6], videoPositions[8], videoPositions[10])
       errorRateRIGHT_ELBOW = (round((abs(rightelbowlist[yoganum] - videoAngleRIGHT_ELBOW)) / rightelbowlist[yoganum] * 100) * 10 / 10).toFloat()
-    }
+    }       //오른쪽 팔의 각도
     if (videochecks[5] and videochecks[7] and videochecks[9]) {
       videoAngleLEFT_ELBOW = getAngle(videoPositions[5], videoPositions[7], videoPositions[9])
       errorRateLEFT_ELBOW = (round((abs(leftelbowlist[yoganum] - videoAngleLEFT_ELBOW)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
-    }
+    }       // 왼쪽 팔의 각도
     if (videochecks[12] and videochecks[14] and videochecks[16]) {
       videoAngleRIGHT_KNEE = getAngle(videoPositions[12], videoPositions[14], videoPositions[16])
       errorRateRIGHT_KNEE = (round((abs(leftelbowlist[yoganum] - videoAngleRIGHT_KNEE)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
-    }
+    }     //오른쪽 다리의 각도
     if (videochecks[11] and videochecks[13] and videochecks[15]) {
       videoAngleLEFT_KNEE = getAngle(videoPositions[11], videoPositions[13], videoPositions[15])
       errorRateLEFT_KNEE = (round((abs(leftelbowlist[yoganum] - videoAngleLEFT_KNEE)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
-    }
-
+    }     //왼쪽 다리의 각도
     if (((errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20)) or
             ((errorRateRIGHT_ELBOW < 20) or (errorRateLEFT_ELBOW < 20) or (errorRateLEFT_KNEE < 20)) or
             ((errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20) or (errorRateLEFT_KNEE < 20)) or
             ((errorRateLEFT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20) or (errorRateLEFT_KNEE < 20))
     ) {
-      Log.e("다음", "넘어가세요")
       if (imagecorrect <= 3) {
         Toast.makeText(context, "자세를 유지하세요", Toast.LENGTH_SHORT).show()
       }
@@ -867,8 +865,8 @@ class PosenetActivity :
     val dy1: Double = (c.y - b.y).toDouble() // y 변화량, b -> c
     val dy2: Double = (a.y - b.y).toDouble() // y 변화량, b -> a
 
-    val radians = Math.abs(Math.atan2(dy1, dx1) - Math.atan2(dy2, dx2))
-    val angle : Float = Math.toDegrees(radians).toFloat()
+    val radians = Math.abs(Math.atan2(dy1, dx1) - Math.atan2(dy2, dx2)) //두 벡터가 이루는 각도 계산
+    val angle : Float = Math.toDegrees(radians).toFloat() // radian 각도를 degree로 변경
 
     Log.e("angle : ",angle.toString())
 
