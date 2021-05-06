@@ -83,7 +83,7 @@ public class Signup3Activity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject();
 
                     try {
-                        jsonObject.put("users_idx",1);
+                        jsonObject.put("users_idx",Signup2Activity.users_idx);
                         jsonObject.put("diets_idx",jsonArray);
 
 
@@ -93,7 +93,7 @@ public class Signup3Activity extends AppCompatActivity {
                     Log.e("json : ",jsonObject.toString());
 
                     Toast.makeText(getApplicationContext(),"선택이 완료 되었습니다.",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Signup3Activity.this,MainActivity.class);
+                    Intent intent = new Intent(Signup3Activity.this,LoginActivity.class);
                     startActivity(intent);
                     finish();
                     overridePendingTransition(R.anim.in_left,R.anim.out_right);

@@ -41,6 +41,7 @@ public class Signup2Activity extends AppCompatActivity {
     String txtname,txtage,txtweight,txtdate;
     int numage,numweigt;
     String spname,spage,spdate;
+    static int users_idx;
 
     String SIGNUP_URL = "http://13.125.245.6:3000/api/users/signup";
 
@@ -266,6 +267,7 @@ public class Signup2Activity extends AppCompatActivity {
                         break;
                     case "success":
                         Toast.makeText(Signup2Activity.this, msg, Toast.LENGTH_SHORT).show();
+                        users_idx = responseJSON.getInt("res_data");
                         SharedPreferences auto = getSharedPreferences("signup", Activity.MODE_PRIVATE);
                         SharedPreferences.Editor editor = auto.edit();
                         editor.clear();
