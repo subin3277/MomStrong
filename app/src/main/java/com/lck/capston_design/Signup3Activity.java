@@ -43,6 +43,7 @@ public class Signup3Activity extends AppCompatActivity {
 
     private String GETALLDIETS_URL = "http://13.125.245.6:3000/api/diets/getAllDiets";
     private String SelectDiets_URL = "http://13.125.245.6:3000/api/diets/patchSelectedDietsRatingsInit";
+    private String initDiets_URL="http://13.125.245.6:3000/api/diets/postDietsRatingsInit";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class Signup3Activity extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
 
+        new ratinginit().execute();
         GetDiet();
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -80,17 +82,7 @@ public class Signup3Activity extends AppCompatActivity {
                     }
                     Log.e("selectlist :",selectlist.toString());
 
-                    JSONObject jsonObject = new JSONObject();
-
-                    try {
-                        jsonObject.put("users_idx",Signup2Activity.users_idx);
-                        jsonObject.put("diets_idx",jsonArray);
-
-
-                    } catch (JSONException e){
-                        e.printStackTrace();
-                    }
-                    Log.e("json : ",jsonObject.toString());
+                    new SelectDiets().execute();
 
                     Toast.makeText(getApplicationContext(),"선택이 완료 되었습니다.",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Signup3Activity.this,LoginActivity.class);
@@ -129,6 +121,62 @@ public class Signup3Activity extends AppCompatActivity {
         }
     }
 
+    private class ratinginit extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            HttpURLConnection connection = null;
+            OutputStream outputStream = null;
+            InputStream inputStream = null;
+            ByteArrayOutputStream baos=null;
+            String response = null;
+
+            try {
+                URL URL = new URL(initDiets_URL);
+                connection=(HttpURLConnection) URL.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Cache-Control","no-cache");
+                connection.setRequestProperty("Content-Type","application/json");
+                connection.setRequestProperty("Accept","application/json");
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+
+                JSONObject jsonObject = new JSONObject();
+
+                try {
+                    jsonObject.put("users_idx",Signup2Activity.users_idx);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+                outputStream = connection.getOutputStream();
+                outputStream.write(jsonObject.toString().getBytes());
+                outputStream.flush();
+
+                int responseCode = connection.getResponseCode();
+
+                if(responseCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = connection.getInputStream();
+                    baos = new ByteArrayOutputStream();
+                    byte[] byteBuffer = new byte[1024];
+                    byte[] byteData = null;
+                    int nLength = 0;
+                    while ((nLength = inputStream.read(byteBuffer, 0, byteBuffer.length)) != -1) {
+                        baos.write(byteBuffer, 0, nLength);
+                    }
+                    byteData = baos.toByteArray();
+                    response = new String(byteData);
+
+                    response = new String(byteData);
+
+                    Log.e("response", response);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+    }
+
     private class SelectDiets extends AsyncTask<Void,Void,String> {
 
         @Override
@@ -143,7 +191,7 @@ public class Signup3Activity extends AppCompatActivity {
             try {
                 URL URL = new URL(SelectDiets_URL);
                 connection=(HttpURLConnection) URL.openConnection();
-                connection.setRequestMethod("POST");
+                connection.setRequestMethod("PATCH");
                 connection.setRequestProperty("Cache-Control","no-cache");
                 connection.setRequestProperty("Content-Type","application/json");
                 connection.setRequestProperty("Accept","application/json");
@@ -153,8 +201,8 @@ public class Signup3Activity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject();
 
                 try {
-                    jsonObject.put("users_idx",1);
-                    jsonObject.put("diets_idx",selectlist);
+                    jsonObject.put("users_idx",Signup2Activity.users_idx);
+                    jsonObject.put("diets_idx",jsonArray);
 
 
                 } catch (JSONException e){
@@ -205,7 +253,7 @@ public class Signup3Activity extends AppCompatActivity {
                 switch (result) {
                     case "success":
                         Toast.makeText(Signup3Activity.this, msg, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Signup3Activity.this, MainActivity.class);
+                        Intent intent = new Intent(Signup3Activity.this, LoginActivity.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.in_left,R.anim.out_right);
                         finish();

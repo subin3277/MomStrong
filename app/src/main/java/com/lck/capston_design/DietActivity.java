@@ -49,6 +49,8 @@ public class DietActivity extends AppCompatActivity {
     static String ricename,soupname,firstname,secondname;
     Button finish1,finish2,finish3,finish4;
     TextView soup,first,second,tvnull;
+    static int ricekacl=0, soupkcal=0,firstkcal=0,secondkcal=0;
+    static String ricenutrition,soupnutrition,firstnutrition,secondnutrition;
 
     static ArrayList<String> ricelist = new ArrayList<>();
     static ArrayList<String> souplist = new ArrayList<>();
@@ -339,7 +341,8 @@ public class DietActivity extends AppCompatActivity {
             super.onPostExecute(response);
 
             JSONObject result, rice;
-            String msg = null , nutrition = null;
+            String msg = null;
+
             int idx=0;
 
             try {
@@ -347,15 +350,16 @@ public class DietActivity extends AppCompatActivity {
                 result = (JSONObject) responseJSON.get("res_data");
                 rice = (JSONObject) result.get("Rice");
                 msg = rice.getString("dietName");
-                nutrition = rice.getString("classification");
+                ricenutrition = rice.getString("classification");
+                ricekacl = rice.getInt("kcal");
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            Log.e("response",msg + nutrition);
+            Log.e("response",msg + ricenutrition);
 
-            riceitem = new DietItem(msg,nutrition,idx);
+            riceitem = new DietItem(msg,ricenutrition,idx);
             dietAdapter_rice.addItem(riceitem);
             recyclerViewrice.setAdapter(dietAdapter_rice);
             ricename=riceitem.getName();
@@ -431,7 +435,7 @@ public class DietActivity extends AppCompatActivity {
             super.onPostExecute(response);
 
             JSONObject result, rice;
-            String msg = null , nutrition = null;
+            String msg = null;
             int idx=0;
 
             try {
@@ -439,13 +443,14 @@ public class DietActivity extends AppCompatActivity {
                 result = (JSONObject) responseJSON.get("res_data");
                 rice = (JSONObject) result.get("soup");
                 msg = rice.getString("dietName");
-                nutrition = rice.getString("classification");
+                soupnutrition = rice.getString("classification");
+                soupkcal=rice.getInt("kcal");
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            soupitem = new DietItem(msg,nutrition,idx);
+            soupitem = new DietItem(msg,soupnutrition,idx);
             dietAdapter_soup.addItem(soupitem);
             recyclerViewsoup.setAdapter(dietAdapter_soup);
             soupname=soupitem.getName();
@@ -521,7 +526,7 @@ public class DietActivity extends AppCompatActivity {
             super.onPostExecute(response);
 
             JSONArray result;
-            String msg = null , nutrition = null;
+            String msg = null;
             int idx=0;
 
             try {
@@ -531,8 +536,9 @@ public class DietActivity extends AppCompatActivity {
                 for (int i=0;i<result.length();i++){
                     JSONObject rice = result.getJSONObject(i);
                     msg = rice.getString("dietName");
-                    nutrition = rice.getString("classification");
-                    firstitem = new DietItem(msg,nutrition,idx);
+                    firstnutrition = rice.getString("classification");
+                    firstkcal= rice.getInt("kcal");
+                    firstitem = new DietItem(msg,firstnutrition,idx);
                     side1list.add(firstitem);
                 }
 
@@ -540,7 +546,7 @@ public class DietActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Log.e("response",msg + nutrition);
+            Log.e("response",msg + firstnutrition);
 
             dietAdapter_first.addItem(firstitem);
             recyclerViewfirst.setAdapter(dietAdapter_first);
@@ -616,7 +622,7 @@ public class DietActivity extends AppCompatActivity {
             super.onPostExecute(response);
 
             JSONArray result;
-            String msg = null , nutrition = null;
+            String msg = null;
             int idx=0;
 
             try {
@@ -626,8 +632,9 @@ public class DietActivity extends AppCompatActivity {
                 for (int i=0;i<result.length();i++){
                     JSONObject rice = result.getJSONObject(i);
                     msg = rice.getString("dietName");
-                    nutrition = rice.getString("classification");
-                    seconditem = new DietItem(msg,nutrition,idx);
+                    secondnutrition = rice.getString("classification");
+                    secondkcal = rice.getInt("kcal");
+                    seconditem = new DietItem(msg,secondnutrition,idx);
                     side2list.add(seconditem);
                 }
 
@@ -635,7 +642,7 @@ public class DietActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Log.e("response",msg + nutrition);
+            Log.e("response",msg + secondnutrition);
 
             dietAdapter_second.addItem(seconditem);
             recyclerViewsecond.setAdapter(dietAdapter_second);
