@@ -96,7 +96,12 @@ public class AddCalendarDialog extends Dialog {
                 dismiss();
             }
         });
-
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
     }
 }

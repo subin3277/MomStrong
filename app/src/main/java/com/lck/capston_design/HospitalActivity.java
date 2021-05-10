@@ -25,6 +25,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -149,12 +150,6 @@ public class HospitalActivity extends AppCompatActivity {
         addcal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-/*
-
-                Intent intent = new Intent(HospitalActivity.this,AddcalActivity.class);
-                startActivity(intent);
-*/
-
 
                 final AddCalendarDialog dialog = new AddCalendarDialog(HospitalActivity.this, new CustomDialogClickListener() {
                     @Override
@@ -183,39 +178,44 @@ public class HospitalActivity extends AppCompatActivity {
                         String txtdate = date.getText().toString();
                         String txtcomment = comment.getText().toString();
 
-                        JSONObject addcal = new JSONObject();
-                        try {
-                            addcal.put("users_id",MainActivity.user_id);
-                            addcal.put("date",txtdate);
-                            addcal.put("content",txtcomment);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (txtcomment.equals("")){
+                            Toast.makeText(HospitalActivity.this,"일정 등록에 실패하였습니다.",Toast.LENGTH_SHORT).show();
+                        } else {
+                            JSONObject addcal = new JSONObject();
+                            try {
+                                addcal.put("users_id",MainActivity.user_id);
+                                addcal.put("date",txtdate);
+                                addcal.put("content",txtcomment);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.e("json",addcal.toString());
+                            HttpURLConnection connection = null;
+                            OutputStream outputStream = null;
+                            InputStream inputStream = null;
+                            ByteArrayOutputStream baos=null;
+
+                            try {
+                                URL URL = new URL(CALPOST_URL);
+                                connection=(HttpURLConnection) URL.openConnection();
+                                connection.setRequestMethod("POST");
+                                connection.setRequestProperty("Cache-Control","no-cache");
+                                connection.setRequestProperty("Content-Type","application/json");
+                                connection.setRequestProperty("Accept","application/json");
+                                connection.setDoOutput(true);
+                                connection.setDoInput(true);
+
+                                outputStream = connection.getOutputStream();
+                                outputStream.write(addcal.toString().getBytes());
+                                outputStream.flush();
+
+                            } catch (IOException e){
+                                e.printStackTrace();
+                            }
+                            new GetCal().execute();
                         }
 
-                        Log.e("json",addcal.toString());
-                        HttpURLConnection connection = null;
-                        OutputStream outputStream = null;
-                        InputStream inputStream = null;
-                        ByteArrayOutputStream baos=null;
-
-                        try {
-                            URL URL = new URL(CALPOST_URL);
-                            connection=(HttpURLConnection) URL.openConnection();
-                            connection.setRequestMethod("POST");
-                            connection.setRequestProperty("Cache-Control","no-cache");
-                            connection.setRequestProperty("Content-Type","application/json");
-                            connection.setRequestProperty("Accept","application/json");
-                            connection.setDoOutput(true);
-                            connection.setDoInput(true);
-
-                            outputStream = connection.getOutputStream();
-                            outputStream.write(addcal.toString().getBytes());
-                            outputStream.flush();
-
-                        } catch (IOException e){
-                            e.printStackTrace();
-                        }
-                        new GetCal().execute();
                     }
                 });
             }
