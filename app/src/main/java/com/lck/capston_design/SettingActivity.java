@@ -138,8 +138,13 @@ public class SettingActivity extends AppCompatActivity {
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtdate = updatedate.getText().toString();
-                new endbutton().execute();
+                if (updatedate.getText().toString().equals("")){
+                    Toast.makeText(SettingActivity.this,"날짜를 선택해주세요.",Toast.LENGTH_SHORT).show();
+                } else{
+                    txtdate = updatedate.getText().toString();
+                    new endbutton().execute();
+                }
+
             }
         });
 
