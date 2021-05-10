@@ -191,6 +191,7 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
             }
         });
 
+
         try {
             Field popup = Spinner.class.getDeclaredField("mPopup");
             popup.setAccessible(true);
@@ -768,8 +769,12 @@ public class FindhospitalActivity extends AppCompatActivity implements OnMapRead
                 StringBuffer buffer = new StringBuffer();
                 buffer.append(HOSP_URL);
                 buffer.append(loca1);
-                buffer.append("&Q1=");
-                buffer.append(loca2);
+                if (loca2.equals("")){
+
+                }else {
+                    buffer.append("&Q1=");
+                    buffer.append(loca2);
+                }
                 buffer.append("&QD=D011");
                 url = new URL(buffer.toString());
                 Log.e("주소 : ", buffer.toString());
