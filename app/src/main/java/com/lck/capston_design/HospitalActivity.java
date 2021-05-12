@@ -64,6 +64,7 @@ public class HospitalActivity extends AppCompatActivity {
     MaterialCalendarView CalendarView;
     ListView listView;
     JSONArray cal_array = new JSONArray();
+    String txtdate,txtcomment;
     private String CALPOST_URL="http://13.125.245.6:3000/api/calendars/postCalendars";
 
     @Override
@@ -84,7 +85,7 @@ public class HospitalActivity extends AppCompatActivity {
         //CalendarDay day = CalendarDay.from(calendar);
         // dates.add(day);
         //CalendarView.addDecorator(new EventDecorator(Color.RED,dates));
-
+        cal_list = new ArrayList<>();
         new GetCal().execute();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.hosp_toolbar);
@@ -175,45 +176,13 @@ public class HospitalActivity extends AppCompatActivity {
                         TextView date = dialog.findViewById(R.id.dialog_date);
                         TextView comment = dialog.findViewById(R.id.addcal_et_text);
 
-                        String txtdate = date.getText().toString();
-                        String txtcomment = comment.getText().toString();
+                        txtdate = date.getText().toString();
+                        txtcomment = comment.getText().toString();
 
                         if (txtcomment.equals("")){
                             Toast.makeText(HospitalActivity.this,"일정 등록에 실패하였습니다.",Toast.LENGTH_SHORT).show();
                         } else {
-                            JSONObject addcal = new JSONObject();
-                            try {
-                                addcal.put("users_id",MainActivity.user_id);
-                                addcal.put("date",txtdate);
-                                addcal.put("content",txtcomment);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            Log.e("json",addcal.toString());
-                            HttpURLConnection connection = null;
-                            OutputStream outputStream = null;
-                            InputStream inputStream = null;
-                            ByteArrayOutputStream baos=null;
-
-                            try {
-                                URL URL = new URL(CALPOST_URL);
-                                connection=(HttpURLConnection) URL.openConnection();
-                                connection.setRequestMethod("POST");
-                                connection.setRequestProperty("Cache-Control","no-cache");
-                                connection.setRequestProperty("Content-Type","application/json");
-                                connection.setRequestProperty("Accept","application/json");
-                                connection.setDoOutput(true);
-                                connection.setDoInput(true);
-
-                                outputStream = connection.getOutputStream();
-                                outputStream.write(addcal.toString().getBytes());
-                                outputStream.flush();
-
-                            } catch (IOException e){
-                                e.printStackTrace();
-                            }
-                            new GetCal().execute();
+                            new postCal().execute();
                         }
 
                     }
@@ -277,6 +246,91 @@ public class HospitalActivity extends AppCompatActivity {
         });
     }
 
+    public class postCal extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            JSONObject addcal = new JSONObject();
+            new GetCal().execute();
+            String response = null;
+            JSONObject jsonObject_first = new JSONObject();
+
+
+            Log.e("json",addcal.toString());
+            HttpURLConnection connection = null;
+            OutputStream outputStream = null;
+            InputStream inputStream = null;
+            ByteArrayOutputStream baos=null;
+
+            try {
+                URL URL = new URL(CALPOST_URL);
+                connection=(HttpURLConnection) URL.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Cache-Control","no-cache");
+                connection.setRequestProperty("Content-Type","application/json");
+                connection.setRequestProperty("Accept","application/json");
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+
+                try {
+                    addcal.put("users_id",MainActivity.user_id);
+                    addcal.put("date",txtdate);
+                    addcal.put("content",txtcomment);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                outputStream = connection.getOutputStream();
+                outputStream.write(addcal.toString().getBytes());
+                outputStream.flush();
+
+                int responseCode = connection.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = connection.getInputStream();
+                    baos = new ByteArrayOutputStream();
+                    byte[] byteBuffer = new byte[1024];
+                    byte[] byteData = null;
+                    int nLength = 0;
+                    while ((nLength = inputStream.read(byteBuffer, 0, byteBuffer.length)) != -1) {
+                        baos.write(byteBuffer, 0, nLength);
+                    }
+                    byteData = baos.toByteArray();
+                    response = new String(byteData);
+
+                    Log.e("response",response);
+
+                }
+
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+
+            String result;
+            String msg = null, nutrition=null;
+            int idx=0;
+
+            try {
+                JSONObject responseJSON = new JSONObject(response);
+                result = responseJSON.getString("res_state");
+                msg = responseJSON.getString("res_msg");
+                Toast.makeText(HospitalActivity.this,msg,Toast.LENGTH_SHORT).show();
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
 
     private class GetCal extends AsyncTask<Void,Void,Void>{
 
