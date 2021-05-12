@@ -43,39 +43,41 @@
             android:text="오늘의 추천은"
             android:gravity="center"
             android:textSize="18dp"
-            android:textColor="@color/black"/>
-        <TextView
-            android:id="@+id/dietinfo_rice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="짜잔~~~~"
-            android:textSize="30sp"
-            android:gravity="center"
             android:textColor="@color/black"
-            />
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:weightSum="10"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/dietinfo_rice"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:padding="5dp">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="항목"
-                    android:textSize="22sp"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="항목"
-                    android:textSize="22sp"
-                    android:layout_weight="1"/>
-            </LinearLayout>
+                android:layout_weight="9"
+                android:text="짜잔~~~~"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                />
+            <ImageView
+                android:id="@+id/dietinfo_btn_rice"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dietinfo_ll_rice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingLeft="10dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,6 +91,7 @@
                     android:textSize="22sp"
                     android:layout_weight="1"/>
                 <TextView
+                    android:id="@+id/dietinfo_classifi_rice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="분류"
@@ -108,6 +111,7 @@
                     android:textSize="22sp"
                     android:layout_weight="1"/>
                 <TextView
+                    android:id="@+id/dietinfo_servings_rice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="1인분 기준량"
@@ -127,6 +131,7 @@
                     android:textSize="22sp"
                     android:layout_weight="1"/>
                 <TextView
+                    android:id="@+id/dietinfo_kcal_rice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="칼로리"
@@ -136,33 +141,290 @@
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/dietinfo_soup"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="짜잔~~~~"
-            android:textSize="30sp"
-            android:gravity="center"
-            android:textColor="@color/black"/>
+            android:weightSum="10"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/dietinfo_soup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:text="짜잔~~~~"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                />
+            <ImageView
+                android:id="@+id/dietinfo_btn_soup"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/dietinfo_side1"
+        <LinearLayout
+            android:id="@+id/dietinfo_ll_soup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="짜잔~~~~"
-            android:textSize="30sp"
-            android:gravity="center"
-            android:textColor="@color/black"/>
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingLeft="10dp">
 
-        <TextView
-            android:id="@+id/dietinfo_side2"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분류"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_classifi_soup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분류"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1인분 기준량"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_servings_soup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1인분 기준량"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="칼로리"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_kcal_soup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="칼로리"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="짜잔~~~~"
-            android:textSize="30sp"
-            android:gravity="center"
-            android:textColor="@color/black"/>
+            android:weightSum="10"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/dietinfo_side1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:text="짜잔~~~~"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                />
+            <ImageView
+                android:id="@+id/dietinfo_btn_side1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dietinfo_ll_side1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingLeft="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분류"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_classifi_side1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분류"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1인분 기준량"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_servings_side1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1인분 기준량"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="칼로리"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_kcal_side1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="칼로리"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="10"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/dietinfo_side2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:text="짜잔~~~~"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                />
+            <ImageView
+                android:id="@+id/dietinfo_btn_side2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dietinfo_ll_side2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingLeft="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분류"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_classifi_side2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분류"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1인분 기준량"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_servings_side2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1인분 기준량"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="칼로리"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/dietinfo_kcal_side2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="칼로리"
+                    android:textSize="22sp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

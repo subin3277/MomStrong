@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.JsonIOException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,6 +50,7 @@ public class DietActivity extends AppCompatActivity {
     static String ricename,soupname,firstname,secondname;
     Button finish1,finish2,finish3,finish4;
     TextView soup,first,second,tvnull;
+    static JSONArray riceresult;
 
     static ArrayList<String> ricelist = new ArrayList<>();
     static ArrayList<String> souplist = new ArrayList<>();
@@ -63,8 +65,8 @@ public class DietActivity extends AppCompatActivity {
 
     static ArrayList<DietItem> side1list = new ArrayList<>();
     static ArrayList<DietItem> side2list = new ArrayList<>();
-    static int side1index = 1;
-    static int side2index = 1;
+    static int side1index = 0;
+    static int side2index = 0;
     static int firstlength = 0;
     static int secondlength = 0;
     static JSONObject ricejson,soupjson,firstjson,secondjson;
@@ -97,6 +99,11 @@ public class DietActivity extends AppCompatActivity {
         second = findViewById(R.id.diet_tv_second);
 
         tvnull = findViewById(R.id.dietlist_null);
+
+        ricelist = new ArrayList<>();
+        souplist = new ArrayList<>();
+        firstlist = new ArrayList<>();
+        secondlist = new ArrayList<>();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.diet_nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -287,7 +294,6 @@ public class DietActivity extends AppCompatActivity {
             ByteArrayOutputStream baos = null;
 
             try {
-                Log.e("진행:","1");
                 URL url = new URL(RICE_URL);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
@@ -529,14 +535,14 @@ public class DietActivity extends AppCompatActivity {
             try {
                 JSONObject responseJSON = new JSONObject(response);
                 result = (JSONArray) responseJSON.get("res_data");
+                riceresult = result;
                 firstlength = result.length();
-                for (int i=0;i<result.length();i++){
-                    firstjson = result.getJSONObject(i);
-                    msg = firstjson.getString("dietName");
-                    nutrition = firstjson.getString("classification");
-                    firstitem = new DietItem(msg,nutrition,idx);
-                    side1list.add(firstitem);
-                }
+
+                firstjson = result.getJSONObject(side1index);
+                msg = firstjson.getString("dietName");
+                nutrition = firstjson.getString("classification");
+                firstitem = new DietItem(msg,nutrition,idx);
+                side1list.add(firstitem);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -549,6 +555,25 @@ public class DietActivity extends AppCompatActivity {
             firstname=firstitem.getName();
             firstlist.add(firstname);
         }
+    }
+
+    static void Side1set(int index) {
+
+        try {
+            String msg = null, nutrition=null;
+            firstjson = riceresult.getJSONObject(side1index);
+            msg = firstjson.getString("dietName");
+            nutrition = firstjson.getString("classification");
+            firstitem = new DietItem(msg,nutrition,side1index);
+            side1list.add(firstitem);
+        } catch (JsonIOException | JSONException e){
+            e.printStackTrace();
+        }
+        dietAdapter_first.addItem(firstitem);
+        recyclerViewfirst.setAdapter(dietAdapter_first);
+        firstname=firstitem.getName();
+        firstlist.add(firstname);
+
     }
 
     public static class GetSide2 extends AsyncTask<Void, Void, String> {

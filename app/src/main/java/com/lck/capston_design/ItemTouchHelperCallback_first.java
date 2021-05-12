@@ -157,11 +157,7 @@ public class ItemTouchHelperCallback_first extends ItemTouchHelper.Callback{
                 if(listener != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())){
                     if(buttonsShowedState == ButtonsState_first.LEFT_VISIBLE){
                         listener.onLeftClick(viewHolder.getAdapterPosition(), viewHolder);
-                        //new DietActivity.GetSide1().execute();
-                        DietActivity.dietAdapter_first.addItem(DietActivity.side1list.get(DietActivity.side1index));
-                        DietActivity.recyclerViewfirst.setAdapter(DietActivity.dietAdapter_first);
-                        DietActivity.firstname=DietActivity.firstitem.getName();
-                        DietActivity.firstlist.add(DietActivity.firstname);
+                        DietActivity.Side1set(DietActivity.side1index);
                         DietActivity.side1index +=1 ;
                         if (DietActivity.side1index >= DietActivity.firstlength){
                             Toast.makeText(recyclerView.getContext(), "다시 처음으로 돌아갑니다.", Toast.LENGTH_SHORT).show();
@@ -169,11 +165,7 @@ public class ItemTouchHelperCallback_first extends ItemTouchHelper.Callback{
                         }
                     }else if(buttonsShowedState == ButtonsState_first.RIGHT_VISIBLE){
                         listener.onRightClick(viewHolder.getAdapterPosition(), viewHolder);
-                        //new DietActivity.GetSide1().execute();
-                        DietActivity.dietAdapter_first.addItem(DietActivity.side1list.get(DietActivity.side1index));
-                        DietActivity.recyclerViewfirst.setAdapter(DietActivity.dietAdapter_first);
-                        DietActivity.firstname=DietActivity.firstitem.getName();
-                        DietActivity.firstlist.add(DietActivity.firstname);
+                        DietActivity.Side1set(DietActivity.side1index);
                         DietActivity.side1index +=1 ;
                         if (DietActivity.side1index >= DietActivity.firstlength){
                             Toast.makeText(recyclerView.getContext(), "다시 처음으로 돌아갑니다.", Toast.LENGTH_SHORT).show();
