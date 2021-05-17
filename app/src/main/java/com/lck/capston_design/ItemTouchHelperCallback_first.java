@@ -157,16 +157,16 @@ public class ItemTouchHelperCallback_first extends ItemTouchHelper.Callback{
                 if(listener != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())){
                     if(buttonsShowedState == ButtonsState_first.LEFT_VISIBLE){
                         listener.onLeftClick(viewHolder.getAdapterPosition(), viewHolder);
-                        DietActivity.Side1set(DietActivity.side1index);
                         DietActivity.side1index +=1 ;
+                        DietActivity.Side1set(DietActivity.side1index);
                         if (DietActivity.side1index >= DietActivity.firstlength){
                             Toast.makeText(recyclerView.getContext(), "다시 처음으로 돌아갑니다.", Toast.LENGTH_SHORT).show();
                             DietActivity.side1index = 0;
                         }
                     }else if(buttonsShowedState == ButtonsState_first.RIGHT_VISIBLE){
                         listener.onRightClick(viewHolder.getAdapterPosition(), viewHolder);
-                        DietActivity.Side1set(DietActivity.side1index);
                         DietActivity.side1index +=1 ;
+                        DietActivity.Side1set(DietActivity.side1index);
                         if (DietActivity.side1index >= DietActivity.firstlength){
                             Toast.makeText(recyclerView.getContext(), "다시 처음으로 돌아갑니다.", Toast.LENGTH_SHORT).show();
                             DietActivity.side1index = 0;

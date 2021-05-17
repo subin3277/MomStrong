@@ -50,7 +50,7 @@ public class DietActivity extends AppCompatActivity {
     static String ricename,soupname,firstname,secondname;
     Button finish1,finish2,finish3,finish4;
     TextView soup,first,second,tvnull;
-    static JSONArray riceresult;
+    static JSONArray riceresult,firstresult,secondresult;
 
     static ArrayList<String> ricelist = new ArrayList<>();
     static ArrayList<String> souplist = new ArrayList<>();
@@ -104,6 +104,8 @@ public class DietActivity extends AppCompatActivity {
         souplist = new ArrayList<>();
         firstlist = new ArrayList<>();
         secondlist = new ArrayList<>();
+        side1index=0;
+        side2index=0;
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.diet_nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -535,7 +537,7 @@ public class DietActivity extends AppCompatActivity {
             try {
                 JSONObject responseJSON = new JSONObject(response);
                 result = (JSONArray) responseJSON.get("res_data");
-                riceresult = result;
+                firstresult = result;
                 firstlength = result.length();
 
                 firstjson = result.getJSONObject(side1index);
@@ -561,7 +563,7 @@ public class DietActivity extends AppCompatActivity {
 
         try {
             String msg = null, nutrition=null;
-            firstjson = riceresult.getJSONObject(side1index);
+            firstjson = firstresult.getJSONObject(side1index);
             msg = firstjson.getString("dietName");
             nutrition = firstjson.getString("classification");
             firstitem = new DietItem(msg,nutrition,side1index);
@@ -574,6 +576,24 @@ public class DietActivity extends AppCompatActivity {
         firstname=firstitem.getName();
         firstlist.add(firstname);
 
+    }
+
+    static void Side2set(int index) {
+
+        try {
+            String msg = null, nutrition=null;
+            secondjson = secondresult.getJSONObject(index);
+            msg = secondjson.getString("dietName");
+            nutrition = secondjson.getString("classification");
+            seconditem = new DietItem(msg,nutrition,side2index);
+            side2list.add(seconditem);
+        } catch (JsonIOException | JSONException e){
+            e.printStackTrace();
+        }
+        dietAdapter_second.addItem(seconditem);
+        recyclerViewsecond.setAdapter(dietAdapter_second);
+        secondname=seconditem.getName();
+        secondlist.add(secondname);
     }
 
     public static class GetSide2 extends AsyncTask<Void, Void, String> {
@@ -649,14 +669,14 @@ public class DietActivity extends AppCompatActivity {
             try {
                 JSONObject responseJSON = new JSONObject(response);
                 result = (JSONArray) responseJSON.get("res_data");
+                secondresult = result;
                 secondlength = result.length();
-                for (int i=0;i<result.length();i++){
-                    secondjson = result.getJSONObject(i);
-                    msg = secondjson.getString("dietName");
-                    nutrition = secondjson.getString("classification");
-                    seconditem = new DietItem(msg,nutrition,idx);
-                    side2list.add(seconditem);
-                }
+
+                secondjson = result.getJSONObject(side2index);
+                msg = secondjson.getString("dietName");
+                nutrition = secondjson.getString("classification");
+                seconditem = new DietItem(msg,nutrition,idx);
+                side2list.add(seconditem);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -668,6 +688,7 @@ public class DietActivity extends AppCompatActivity {
             recyclerViewsecond.setAdapter(dietAdapter_second);
             secondname=seconditem.getName();
             secondlist.add(secondname);
+
         }
     }
 
