@@ -604,20 +604,6 @@ class PosenetActivity :
 
       }
     }
-/*
-
-    for (line in bodypoint) {
-      if (
-              (person.keyPoints[line.first.ordinal].score > minConfidence) and
-              (person.keyPoints[line.second.ordinal].score > minConfidence) and
-              (person.keyPoints[line.third.ordinal].score > minConfidence)
-      ) {
-        getAngle(person.keyPoints[line.first.ordinal].position,
-                person.keyPoints[line.second.ordinal].position,
-                person.keyPoints[line.third.ordinal].position)
-      }
-    }
-*/
 
     videoAngleRIGHT_ELBOW = 0.0F
     videoAngleLEFT_ELBOW = 0.0F
@@ -645,10 +631,12 @@ class PosenetActivity :
       videoAngleLEFT_KNEE = getAngle(videoPositions[11], videoPositions[13], videoPositions[15])
       errorRateLEFT_KNEE = (round((abs(leftelbowlist[yoganum] - videoAngleLEFT_KNEE)) / leftelbowlist[yoganum] * 100) * 10 / 10).toFloat()
     }     //왼쪽 다리의 각도
-    if (((errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20)) or
-            ((errorRateRIGHT_ELBOW < 20) or (errorRateLEFT_ELBOW < 20) or (errorRateLEFT_KNEE < 20)) or
-            ((errorRateRIGHT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20) or (errorRateLEFT_KNEE < 20)) or
-            ((errorRateLEFT_ELBOW < 20) or (errorRateRIGHT_KNEE < 20) or (errorRateLEFT_KNEE < 20))
+    if (((errorRateRIGHT_ELBOW < 20) and (errorRateRIGHT_KNEE < 20) ) or
+            ((errorRateRIGHT_ELBOW<20) and (errorRateLEFT_ELBOW < 20)) or
+            ((errorRateRIGHT_ELBOW<20) and (errorRateLEFT_KNEE<20)) or
+            ((errorRateLEFT_ELBOW<20) and (errorRateLEFT_KNEE<20)) or
+            ((errorRateLEFT_ELBOW<20) and (errorRateRIGHT_KNEE<20)) or
+            ((errorRateRIGHT_KNEE<20) and (errorRateLEFT_KNEE<20))
     ) {
       if (imagecorrect <= 3) {
         Toast.makeText(context, "자세를 유지하세요", Toast.LENGTH_SHORT).show()
@@ -659,7 +647,7 @@ class PosenetActivity :
     if (imagecorrect >= 50 ) {
       imagecorrect=0
 
-      if(pathlist.size>=yoganum){
+      if(yoganum>=pathlist.size){
         Toast.makeText(context,"모든 자세를 수행했습니다.\n자세 교정을 종료합니다.",Toast.LENGTH_SHORT).show()
         var intent = Intent(context,Yoga1stActivity::class.java)
         startActivity(intent)
