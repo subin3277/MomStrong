@@ -36,7 +36,6 @@
         <activity android:name="com.lck.capston_design.Yoga1stActivity" />
         <activity android:name="com.lck.capston_design.Signup2Activity" />
         <activity android:name="com.lck.capston_design.YogaActivity" />
-        <activity android:name="com.lck.capston_design.InformationActivity" />
         <activity android:name="com.lck.capston_design.HospitalActivity" />
         <activity android:name="com.lck.capston_design.DietActivity" />
         <activity android:name="com.lck.capston_design.FindhospitalActivity" />
