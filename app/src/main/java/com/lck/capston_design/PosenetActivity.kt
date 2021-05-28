@@ -638,13 +638,13 @@ class PosenetActivity :
             ((errorRateLEFT_ELBOW<20) and (errorRateRIGHT_KNEE<20)) or
             ((errorRateRIGHT_KNEE<20) and (errorRateLEFT_KNEE<20))
     ) {
-      if (imagecorrect <= 3) {
+      if ((imagecorrect == 10)||(imagecorrect==20)) {
         Toast.makeText(context, "자세를 유지하세요", Toast.LENGTH_SHORT).show()
       }
       imagecorrect += 1
     }
 
-    if (imagecorrect >= 50 ) {
+    if (imagecorrect == 60 ) {
       imagecorrect=0
 
       if(yoganum>=pathlist.size){
